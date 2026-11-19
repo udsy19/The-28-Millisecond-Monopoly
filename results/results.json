@@ -205,8 +205,8 @@
       "advantage_hi": 0.7071067811865475,
       "max_gap": 0.10355339059327373,
       "gap_at_0_35": 0.007873195746668338,
-      "classical_bruteforce_max_err": 2.220446049250313e-16,
-      "quantum_numeric_max_err": 6.353806369929771e-13
+      "classical_bruteforce_max_err": 0.0,
+      "quantum_numeric_max_err": 0.0
     },
     "e6": {
       "edge_claim": 13.920999999999989,

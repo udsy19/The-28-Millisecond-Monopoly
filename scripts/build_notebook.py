@@ -475,7 +475,9 @@ numeric_err = max(abs(chsh.biased_quantum_numeric(p, rng) - chsh.biased_quantum(
 R["e5"] = dict(gap_at_half=chsh.biased_quantum(0.5) - chsh.biased_classical(0.5),
                advantage_lo=lo, advantage_hi=hi, max_gap=float(gap.max()),
                gap_at_0_35=chsh.biased_quantum(0.35) - chsh.biased_classical(0.35),
-               classical_bruteforce_max_err=brute_err, quantum_numeric_max_err=numeric_err)
+               # Rounded: optimiser noise at ~1e-13 differs across BLAS/CPU builds, and
+               # results.json must be byte-identical on every machine.
+               classical_bruteforce_max_err=round(brute_err, 9), quantum_numeric_max_err=round(numeric_err, 9))
 D.update(gap_half=f"{100 * R['e5']['gap_at_half']:.1f} percentage points",
          adv_lo=f"{lo:.2f}", adv_hi=f"{hi:.2f}",
          adv_lo_pct=pct(lo, 0), adv_hi_pct=pct(hi, 0))

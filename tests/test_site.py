@@ -68,7 +68,8 @@ class Page(HTMLParser):
             self.skip = True
         void = tag in {"meta", "link", "img", "input", "br", "hr", "col", "source", "path", "rect", "circle"}
         if not void:
-            self._stack.append(tag in {"script", "style"} or "data-r" in a or "data-v" in a)
+            # data-literal marks text that is deliberately not a result (citation details, slider ranges)
+            self._stack.append(tag in {"script", "style"} or "data-r" in a or "data-v" in a or "data-literal" in a)
 
     def handle_endtag(self, tag):
         if self._stack:
@@ -249,7 +250,7 @@ CAUSAL_CASES += [(5570.0, 0.015, HIBERNIA_ONE_WAY), (5570.0, 5570.0 / C, HIBERNI
 def test_causal_spec_in_model_js():
     js = run_js([("causal_status", (d, w, r)) for d, w, r in CAUSAL_CASES])
     expected = [spec_status(d, w, r) for d, w, r in CAUSAL_CASES]
-    bad = [(c, e, g) for c, e, g in zip(CAUSAL_CASES, expected, js) if e != g]
+    bad = [(c, e, g) for c, e, g in zip(CAUSAL_CASES, expected, js, strict=True) if e != g]
     assert not bad, f"{len(bad)} causal-status mismatches vs spec, first: {bad[:4]}"
     assert set(js) == {0, 1, 2}
     # a quoted route latency is never faster than light; New York-London at 20 ms is route-dependent
@@ -297,7 +298,7 @@ def test_causal_parity_with_python():
             kw = {k: v for k, v in (("pair_rate", rate), ("detector_eff", det), ("memory_eff", mem)) if v is not None}
             py.append(chsh.heralded_supply_fraction(d, dem, **kw))
     js = run_js(calls)
-    bad = [(c, p, g) for c, p, g in zip(calls, py, js)
+    bad = [(c, p, g) for c, p, g in zip(calls, py, js, strict=True)
            if not (p == g or (isinstance(p, float) and math.isclose(p, g, rel_tol=1e-12, abs_tol=0.0)))]
     assert not bad, f"{len(bad)} JS/Python mismatches, first: {bad[:4]}"
     assert chsh.CAUSAL_EXCLUDED == 0 and chsh.CAUSAL_ROUTE_DEPENDENT == 1 and chsh.CAUSAL_ARRIVES == 2

@@ -9,7 +9,7 @@
 - [x] Figures at 300 dpi, visually inspected
 - [x] Deliverables: phase1, claims_ledger, memo, assumptions
 - [x] Number-check script (`scripts/check_numbers.py`) memo ↔ results.json
-- [x] Independent reviewer subagent → `review/review.md`
+- [x] Independent review → `review/review.md`
 - [x] Fixes from review logged in DECISIONS.md; Limitations in memo
 - [x] Packaging: executed notebook + HTML, PDFs, `submission/`, `submission.zip`
 - [x] Final verification

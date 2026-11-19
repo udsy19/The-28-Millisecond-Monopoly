@@ -188,7 +188,8 @@
         : "No signal can arrive in time. ";
       if (winRate > M.CLASSICAL_MAX) {
         v = pre + "Quantum wins " + pct(winRate, 1) + " of rounds, beating 75% by " + money(edge) + " per round" +
-          (s.herald ? ", but only with stored entanglement the startup has not claimed or demonstrated at this distance." : ", under idealized assumptions.");
+          (s.herald ? ", but only with stored entanglement the startup has not claimed or demonstrated at this distance." +
+            (s.hypothetical && h > cap + 1e-12 ? " The pair supply behind this h is hypothetical (not validated)." : "") : ", under idealized assumptions.");
         tone = "good";
       } else if (s.herald) {
         v = pre + "With only " + pct(h, 1) + " of rounds heralded, quantum wins " + pct(winRate, 1) + ": no better than classical's 75%.";

@@ -105,7 +105,7 @@ PDFs and website. The website reads the same `results.json` at runtime. The numb
 - Cite with [`CITATION.cff`](CITATION.cff); please also cite Ding & Jiang (arXiv:2407.21723) and the other sources in the memo.
 - Contributions: [`CONTRIBUTING.md`](CONTRIBUTING.md) · conduct: [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) ·
   security: [`SECURITY.md`](SECURITY.md) · changes: [`CHANGELOG.md`](CHANGELOG.md).
-- Disclosure of the case file, sources and AI assistance (built with Claude Code): [`DISCLOSURE.md`](DISCLOSURE.md).
+- Disclosure of the case file and sources: [`DISCLOSURE.md`](DISCLOSURE.md).
 
 ## License
 

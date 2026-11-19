@@ -302,3 +302,27 @@ def test_causal_parity_with_python():
            if not (p == g or (isinstance(p, float) and math.isclose(p, g, rel_tol=1e-12, abs_tol=0.0)))]
     assert not bad, f"{len(bad)} JS/Python mismatches, first: {bad[:4]}"
     assert chsh.CAUSAL_EXCLUDED == 0 and chsh.CAUSAL_ROUTE_DEPENDENT == 1 and chsh.CAUSAL_ARRIVES == 2
+
+
+CAUSAL_NAMES = {"physically_excluded": 0, "route_dependent": 1, "classical_arrives": 2}
+REGION_NAMES = {"grey": 0, "red": 1, "yellow": 2, "green": 3}
+
+
+@needs_node
+@pytest.mark.skipif("frontier_states" not in VALUES, reason="results.json has no frontier_states table")
+def test_model_js_reproduces_frontier_states():
+    """model.js reproduces the notebook's causal state and region for every landmark and window."""
+    rows = VALUES["frontier_states"]
+    calls = []
+    for r in rows:
+        route = r["route_latency_s"] if "London" in r["landmark"] else None   # others use the default fibre route
+        calls += [("route_latency_s", (r["km"], route)), ("causal_status", (r["km"], r["window_s"], route)),
+                  ("frontier_region", (r["km"], r["window_s"], VALUES["inputs"]["p_quantum_claim"], 1.0, route))]
+    js = run_js(calls)
+    bad = []
+    for i, r in enumerate(rows):
+        lat, st, reg = js[3 * i: 3 * i + 3]
+        if not math.isclose(lat, r["route_latency_s"], rel_tol=1e-12, abs_tol=0.0) \
+                or st != CAUSAL_NAMES[r["causal_state"]] or reg != REGION_NAMES[r["frontier_region"]]:
+            bad.append((r["landmark"], r["window"], lat, st, reg))
+    assert not bad, f"model.js disagrees with results.json frontier_states: {bad}"

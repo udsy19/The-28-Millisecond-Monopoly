@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: pip install -r requirements.txt
+      - name: Unit + parity tests
+        run: python -m pytest -q
+      - name: Execute notebook from a clean kernel
+        run: jupyter nbconvert --to notebook --execute analysis.ipynb --output analysis_executed.ipynb
+      - name: Deliverables render from results.json and every number is traceable
+        run: |
+          python scripts/render_deliverables.py
+          python scripts/check_numbers.py
+          git diff --exit-code -- results/results.json deliverables/memo.md || (echo "results or memo changed on re-run" && exit 1)

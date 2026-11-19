@@ -22,6 +22,8 @@ ALLOW = {
     "343": "Nature page", "356": "Science volume", "1140": "Science page",
     "03": "challenge number", "16": "number of classical rules (E1)",
     "10": "Theorem 10 / 5-10 µs", "4995": "course code", "0": "answer bit 0",
+    "3.13": "Python version", "22": "Node version", "8000": "local preview port", "300": "figure dpi",
+    "32": "Carteret–Secaucus km (approximate, A13)", "56": "NYSE–Nasdaq km (approximate, A13)",
 }
 
 display = json.loads((ROOT / "results" / "results.json").read_text())["display"]
@@ -55,7 +57,7 @@ def check(path):
     return bad
 
 
-files = [Path(f).resolve() for f in sys.argv[1:]] or sorted((ROOT / "deliverables").glob("*.md"))
+files = [Path(f).resolve() for f in sys.argv[1:]] or [*sorted((ROOT / "deliverables").glob("*.md")), ROOT / "README.md"]
 problems = [b for f in files for b in check(f)]
 for p in problems:
     print("UNTRACEABLE", p)

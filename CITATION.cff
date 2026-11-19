@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this analysis, please cite it as below. Please also cite the original works it relies on."
+title: "The Photon That Didn't Show Up: photon loss and the CHSH trading edge"
+abstract: >-
+  Open, reproducible investment-diligence study of a fictional startup that sells entanglement-based
+  (CHSH-game) coordination to trading desks. It brute-forces the classical limit, models photon loss on
+  fibre with a Monte Carlo that drops photons, shows a classical detection-loophole strategy that scores
+  82%, maps where quantum could ever beat one classical bit, and tests the business case. Every number is
+  produced by code and traceable to results/results.json.
+authors:
+  - given-names: Udaya
+    family-names: Tejas
+type: software
+license: MIT
+version: 1.0.0
+date-released: 2026-11-19
+repository-code: "https://github.com/udsy19/The-28-Millisecond-Monopoly"
+url: "https://udsy19.github.io/The-28-Millisecond-Monopoly/"
+keywords: [CHSH, Bell inequality, entanglement, detection loophole, photon loss, quantum finance, due diligence, reproducibility]
+references:
+  - type: article
+    title: "Coordinating Decisions via Quantum Telepathy"
+    authors: [{family-names: Ding}, {family-names: Jiang}]
+    year: 2024
+    url: "https://arxiv.org/abs/2407.21723"
+  - type: article
+    title: "Background-free test of Bell's inequality (detection-efficiency threshold)"
+    authors: [{family-names: Eberhard}]
+    year: 1993
+    journal: "Physical Review A"
+    volume: 47
+    start: R747
+  - type: article
+    title: "Quantifying the high-frequency trading arms race"
+    authors: [{family-names: Aquilina}, {family-names: Budish}, {family-names: "O'Neill"}]
+    year: 2022
+    journal: "The Quarterly Journal of Economics"
+    volume: 137
+    issue: 1

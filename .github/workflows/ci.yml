@@ -1,7 +1,10 @@
 name: CI
 on:
   push:
+    branches: [main]
   pull_request:
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,7 +17,9 @@ jobs:
         with:
           node-version: "22"
       - run: pip install -r requirements.txt
-      - name: Unit + parity tests
+      - name: Lint
+        run: python -m ruff check .
+      - name: Unit, parity and site tests
         run: python -m pytest -q
       - name: Execute notebook from a clean kernel
         run: jupyter nbconvert --to notebook --execute analysis.ipynb --output analysis_executed.ipynb

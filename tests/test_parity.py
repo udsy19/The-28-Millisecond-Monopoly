@@ -69,7 +69,7 @@ def test_js_matches_python():
     js = run_js(cases)
     assert len(js) == len(cases)
     bad = []
-    for (fn, args, py), got in zip(cases, js):
+    for (fn, args, py), got in zip(cases, js, strict=True):
         if fn == "frontier_region":
             if got != py:
                 bad.append((fn, args, py, got))

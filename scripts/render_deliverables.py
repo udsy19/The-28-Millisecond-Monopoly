@@ -12,16 +12,19 @@ ROOT = Path(__file__).resolve().parents[1]
 display = json.loads((ROOT / "results" / "results.json").read_text())["display"]
 
 missing = []
-for tmpl in sorted((ROOT / "deliverables" / "templates").glob("*.md")):
-    def sub(m):
+TARGETS = [(t, ROOT / "deliverables" / t.name) for t in sorted((ROOT / "deliverables" / "templates").glob("*.md"))]
+TARGETS.append((ROOT / "docs" / "README.template.md", ROOT / "README.md"))
+
+for tmpl, target in TARGETS:
+    def sub(m, name=tmpl.name):
         key = m.group(1)
         if key not in display:
-            missing.append(f"{tmpl.name}: {key}")
+            missing.append(f"{name}: {key}")
             return m.group(0)
         return display[key]
     out = re.sub(r"\{\{(\w+)\}\}", sub, tmpl.read_text())
-    (ROOT / "deliverables" / tmpl.name).write_text(out)
-    print("rendered deliverables/" + tmpl.name)
+    target.write_text(out)
+    print("rendered " + str(target.relative_to(ROOT)))
 
 if missing:
     sys.exit("missing display keys: " + ", ".join(missing))

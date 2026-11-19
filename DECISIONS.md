@@ -46,3 +46,14 @@ The reviewer re-derived 15 numbers from first principles; all matched `results.j
 | 16 [nit] Unsourced 80–95% detector figure; landmark distances | Partly | Removed the 80–95% figure; distances remain approximate and are labelled so (A13) |
 | Reviewer suggested 0.15 dB/km row | No (not from a listed source) | Used 0.17 dB/km, which Ding & Jiang use, plus an explicitly hypothetical 0.1 dB/km |
 | Craddock / Yin pair-rate details | Not verifiable offline | Kept as cited in the brief's source list, without extra claims |
+
+## Open-source release and website
+
+| # | Decision | Alternatives considered | Why |
+|---|---|---|---|
+| D19 | MIT licence, CITATION.cff, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT (Contributor Covenant 2.1 by reference), CHANGELOG, DISCLOSURE, issue/PR templates, Dependabot, pyproject with ruff + pytest config | Copy QMint's files verbatim | Mirrors the structure of the owner's QMint repository, adapted to this project (no secrets, no hardware, fictional case) |
+| D20 | README is rendered from `docs/README.template.md` and checked by `check_numbers.py` | Hand-written README | The README quotes results; the same no-hand-typed-numbers rule applies |
+| D21 | Website keeps a no-build static stack (HTML/CSS/vanilla JS) styled with QMint's design tokens, fonts and layout grammar | Port QMint's Next.js/Tailwind stack | Same look with no Node build in CI; `model.js` parity tests stay simple. Numbers load from `results.json` at runtime |
+| D22 | Pages deploys from `main` via GitHub Actions (no `gh-pages` branch) | QMint's manual gh-pages publish | The owner asked for a single `main` branch |
+| D23 | Single long-lived branch: PR #1 merged into `main`; the owner's earlier parallel attempts `build/autonomous-research` and `build/end-to-end-investigation` (unmerged, overlapping, conflicting) preserved as tags `archive/autonomous-research` and `archive/end-to-end-investigation`, then their branches deleted along with the merged feature branch | Merge them into main; delete without archiving | Merging would duplicate and conflict with the reviewed submission; tags keep every commit recoverable without extra branches |
+| D24 | Committed PDFs under `reports/` (build/ stays ignored) | Build PDFs in the Pages workflow | PDF build needs pandoc + Chromium; committing three small PDFs keeps Pages fast and reproducible via `scripts/package.sh` |

@@ -18,7 +18,7 @@ import numpy as np
 # Constants (all are modelling choices, recorded in DECISIONS.md / assumptions.md)
 # ---------------------------------------------------------------------------
 SPEED_OF_LIGHT_KM_S = 299_792.458   # vacuum: the earliest any signal can arrive
-FIBRE_GROUP_INDEX = 1.468           # standard single-mode fibre at 1550 nm
+FIBRE_GROUP_INDEX = 1.47            # standard single-mode fibre at 1550 nm (shared spec: c/1.47)
 FIBRE_SPEED_KM_S = SPEED_OF_LIGHT_KM_S / FIBRE_GROUP_INDEX   # ~204,000 km/s
 FIBRE_LOSS_DB_PER_KM = 0.2          # standard telecom fibre at 1550 nm
 EBERHARD_FLOOR = 2.0 / 3.0          # lowest efficiency any CHSH-type test can tolerate
@@ -267,60 +267,199 @@ def cheater_exact(q=0.4375):
 # ---------------------------------------------------------------------------
 REGION_GREY, REGION_RED, REGION_YELLOW, REGION_GREEN = 0, 1, 2, 3
 
+REGION_NAMES = {REGION_GREY: "grey", REGION_RED: "red", REGION_YELLOW: "yellow", REGION_GREEN: "green"}
+
 # Causal status of one classical bit sent from desk A to desk B after the inputs arrive.
 CAUSAL_EXCLUDED, CAUSAL_ROUTE_DEPENDENT, CAUSAL_ARRIVES = 0, 1, 2
+CAUSAL_STATE_NAMES = {CAUSAL_EXCLUDED: "physically_excluded",
+                      CAUSAL_ROUTE_DEPENDENT: "route_dependent",
+                      CAUSAL_ARRIVES: "classical_arrives"}
 
 
 def route_latency_s(d_km, route_latency=None):
     """One-way latency of the modelled classical route.
 
-    Default: a straight-line fibre at the fibre group velocity (c / 1.468). That is
-    optimistic for a real cable (real routes are longer) and pessimistic against a
-    line-of-sight microwave link (which runs close to c). Pass ``route_latency`` (seconds)
-    to use a measured or published figure for a specific route instead.
+    Default: a straight-line fibre at the fibre group velocity, FIBRE_GROUP_INDEX * d / c
+    (c/1.47). That is optimistic for a real cable (real routes are longer) and pessimistic
+    against a line-of-sight microwave link (which runs close to c). Pass ``route_latency``
+    (seconds) to use a measured or published figure for a specific route instead.
     """
     d_km = np.asarray(d_km, dtype=float)
-    modelled = d_km / FIBRE_SPEED_KM_S if route_latency is None else np.asarray(route_latency, dtype=float)
+    if route_latency is None:
+        modelled = FIBRE_GROUP_INDEX * d_km / SPEED_OF_LIGHT_KM_S
+    else:
+        modelled = np.asarray(route_latency, dtype=float)
     return np.maximum(modelled, d_km / SPEED_OF_LIGHT_KM_S)   # never faster than light
 
 
 def causal_status(d_km, window_s, route_latency=None):
     """Can one classical bit reach the other desk within the decision window? Works on arrays.
 
-    CAUSAL_EXCLUDED        : window <= d / c. No signal of any kind can arrive (physics).
-    CAUSAL_ROUTE_DEPENDENT : d / c < window <= modelled route latency. Physics allows it,
-                             but the modelled route is too slow; a faster route might not be.
-    CAUSAL_ARRIVES         : window > modelled route latency. The bit arrives on the modelled
+    Shared spec (the website's model.js implements the same boundaries):
+    CAUSAL_EXCLUDED        : window < d / c. No signal of any kind can arrive (physics).
+    CAUSAL_ROUTE_DEPENDENT : d / c <= window < modelled route latency (default 1.47 d / c).
+                             Physics allows it, but the modelled route is too slow; a faster
+                             route might not be.
+    CAUSAL_ARRIVES         : window >= modelled route latency. The bit arrives on the modelled
                              route, and the one-bit rule wins every round.
+    ``CAUSAL_STATE_NAMES`` maps these codes to their string names.
     """
     d_km = np.asarray(d_km, dtype=float)
     window_s = np.asarray(window_s, dtype=float)
     status = np.full(np.broadcast(d_km, window_s).shape, CAUSAL_ROUTE_DEPENDENT)
-    status = np.where(window_s <= d_km / SPEED_OF_LIGHT_KM_S, CAUSAL_EXCLUDED, status)
-    status = np.where(window_s > route_latency_s(d_km, route_latency), CAUSAL_ARRIVES, status)
+    status = np.where(window_s < d_km / SPEED_OF_LIGHT_KM_S, CAUSAL_EXCLUDED, status)
+    status = np.where(window_s >= route_latency_s(d_km, route_latency), CAUSAL_ARRIVES, status)
     return status
+
+
+def loss_region(d_km, p_demo=0.82, detector_eff=1.0):
+    """Photon-loss classification alone (red / yellow / green), ignoring classical bits.
+
+    green  : midpoint-source fibre efficiency beats the break-even level at quality p_demo.
+    yellow : only a near-perfect tuned source near Eberhard's 2/3 floor could beat 75%.
+    red    : too much photon loss for the modelled unheralded strategies to beat 75%.
+    """
+    eta = fibre_eta(np.asarray(d_km, dtype=float), detector_eff=detector_eff)
+    region = np.full(np.shape(eta), REGION_RED)
+    region = np.where(eta > EBERHARD_FLOOR, REGION_YELLOW, region)
+    region = np.where(eta > eta_threshold(p_demo), REGION_GREEN, region)
+    return region
 
 
 def frontier_region(d_km, window_s, p_demo=0.82, detector_eff=1.0, route_latency=None):
     """Classify a (separation, decision window) point. Works on arrays.
 
     grey   : one classical bit arrives on the modelled route and wins every round.
-    Otherwise (no bit on the modelled route), the photon-loss model decides, for the
-             modelled unheralded strategy only:
-    green  : fibre efficiency beats the break-even level at source quality p_demo.
-    yellow : only a near-perfect tuned source near Eberhard's 2/3 floor could beat 75%.
-    red    : too much photon loss for the modelled strategies to beat 75%.
+    Otherwise (no bit on the modelled route) the photon-loss model decides (``loss_region``),
+             for the modelled unheralded strategy only: green, yellow or red.
     Combine with causal_status() to tell a physically excluded bit from a route-dependent one.
     """
     d_km = np.asarray(d_km, dtype=float)
     window_s = np.asarray(window_s, dtype=float)
-    eta = fibre_eta(d_km, detector_eff=detector_eff)
-    region = np.full(np.broadcast(d_km, window_s).shape, REGION_RED)
-    region = np.where(eta > EBERHARD_FLOOR, REGION_YELLOW, region)
-    region = np.where(eta > eta_threshold(p_demo), REGION_GREEN, region)
+    region = np.broadcast_to(loss_region(d_km, p_demo, detector_eff),
+                             np.broadcast(d_km, window_s).shape)
     arrives = causal_status(d_km, window_s, route_latency) == CAUSAL_ARRIVES
-    region = np.where(arrives, REGION_GREY, region)
-    return region
+    return np.where(arrives, REGION_GREY, region)
+
+
+# ---------------------------------------------------------------------------
+# E4b  Sensitivity: entangled source at one desk instead of the midpoint
+# ---------------------------------------------------------------------------
+ENDPOINT_PARTIAL_ETA_FLOOR = 0.5   # asymmetric floor, one perfect detector, partial entanglement
+
+
+def endpoint_fibre_eta(d_km, loss_db_per_km=FIBRE_LOSS_DB_PER_KM, detector_eff=1.0):
+    """Far-desk efficiency when the source sits at desk A: the photon crosses the full d km."""
+    return detector_eff * 10 ** (-loss_db_per_km * np.asarray(d_km, dtype=float) / 10)
+
+
+def endpoint_all_rounds_win(eta_far, p_q, eta_near=1.0):
+    """All-rounds win rate with the source at one desk and the fixed-fallback rule.
+
+    A desk without a photon answers 0. Both photons (eta_near * eta_far): quality p_q.
+    Exactly one photon: the measuring desk's bit is a fair coin (maximally entangled
+    marginals), so 0.5. Neither: 0.75. With eta_near = 1: eta_far * p_q + (1 - eta_far) * 0.5.
+    """
+    both = eta_near * eta_far
+    one = eta_near * (1 - eta_far) + (1 - eta_near) * eta_far
+    none = (1 - eta_near) * (1 - eta_far)
+    return both * p_q + one * 0.5 + none * CLASSICAL_MAX
+
+
+def endpoint_eta_threshold(p_q):
+    """Far-desk efficiency where endpoint_all_rounds_win (eta_near = 1) equals 0.75.
+
+    eta * p_q + (1 - eta) / 2 = 3/4  =>  eta* = 0.25 / (p_q - 0.5).
+    Ideal maximally entangled source (p_q = cos^2(pi/8)): exactly 1/sqrt(2).
+    """
+    return 0.25 / (p_q - 0.5)
+
+
+def endpoint_max_separation_km(eta_needed, loss_db_per_km=FIBRE_LOSS_DB_PER_KM, detector_eff=1.0):
+    """Largest separation at which the far desk's efficiency still reaches eta_needed.
+
+    The far photon crosses the full distance: d = -(10 / loss) * log10(eta_needed / det).
+    Returns 0.0 if the detector alone is already below the requirement.
+    """
+    if eta_needed >= detector_eff:
+        return 0.0
+    return -10.0 / loss_db_per_km * math.log10(eta_needed / detector_eff)
+
+
+def simulate_endpoint_lossy(n, eta_far, rng, visibility=1.0, eta_near=1.0):
+    """Monte Carlo of the source-at-one-desk set-up, using the singlet sampler.
+
+    Desk A receives its photon with probability eta_near (1 by default), desk B with
+    probability eta_far; a desk without a photon answers 0. Returns the all-rounds win rate.
+    """
+    x = rng.integers(0, 2, n)
+    y = rng.integers(0, 2, n)
+    a_q, b_q = sample_quantum_outcomes(x, y, rng, visibility)
+    a = np.where(rng.random(n) < eta_near, a_q, 0)
+    b = np.where(rng.random(n) < eta_far, b_q, 0)
+    return float(wins(x, y, a, b).mean())
+
+
+def partial_state_joint_table(theta, alphas, betas):
+    """P[x, y, a, b] for cos(theta)|HH> + sin(theta)|VV> measured at planar angles.
+
+    theta = pi/4 is maximally entangled; theta -> 0 approaches a product state. Outcome 0 =
+    photon passes the polariser at angle alphas[x] (desk A) or betas[y] (desk B).
+    """
+    psi = np.array([math.cos(theta), 0.0, 0.0, math.sin(theta)])
+
+    def basis(t):
+        return [np.array([math.cos(t), math.sin(t)]), np.array([-math.sin(t), math.cos(t)])]
+
+    table = np.zeros((2, 2, 2, 2))
+    for x, y in itertools.product((0, 1), repeat=2):
+        for a, va in enumerate(basis(alphas[x])):
+            for b, vb in enumerate(basis(betas[y])):
+                table[x, y, a, b] = (np.kron(va, vb) @ psi) ** 2
+    return table
+
+
+def endpoint_partial_terms(theta, params):
+    """(Q, F) for a partially entangled strategy with the source at desk A.
+
+    params = (alpha0, alpha1, beta0, beta1, fb0, fb1): measurement angles, and desk B's
+    no-photon answer for y = 0, 1 (0 or 1). Q = win when both photons are detected; F = win
+    when only desk A's photon is (B plays its fallback). All-rounds win = eta*Q + (1-eta)*F.
+    """
+    t = partial_state_joint_table(theta, params[0:2], params[2:4])
+    fb = (int(params[4]), int(params[5]))
+    q = f = 0.0
+    for x, y, a, b in itertools.product((0, 1), repeat=4):
+        p = 0.25 * t[x, y, a, b]
+        q += p * float((a ^ b) == (x & y))
+        f += p * float((a ^ fb[y]) == (x & y))
+    return q, f
+
+
+def endpoint_partial_eta_threshold(theta, rng, starts=20):
+    """Numerical lowest far-desk efficiency that beats 75% for state angle theta (eta_near = 1).
+
+    For fixed settings the win eta*Q + (1-eta)*F crosses 0.75 at (0.75 - F) / (Q - F) when
+    Q > 0.75 >= F; we minimise that over the four angles and the four fallback choices.
+    The known asymmetric bound with one perfect detector is 1/2, approached as theta -> 0.
+    Returns (threshold, best_params).
+    """
+    from scipy.optimize import minimize
+
+    best = (math.inf, None)
+    for fb0, fb1 in itertools.product((0, 1), repeat=2):
+        def objective(ang, fb0=fb0, fb1=fb1):
+            q, f = endpoint_partial_terms(theta, (*ang, fb0, fb1))
+            if q <= CLASSICAL_MAX or f >= CLASSICAL_MAX:
+                return 2.0 + max(0.0, CLASSICAL_MAX - q)
+            return (CLASSICAL_MAX - f) / (q - f)
+
+        for _ in range(starts):
+            res = minimize(objective, rng.uniform(-math.pi / 2, math.pi / 2, 4), method="Nelder-Mead",
+                           options=dict(xatol=1e-10, fatol=1e-13, maxiter=6000))
+            if res.fun < best[0]:
+                best = (float(res.fun), (*(float(v) for v in res.x), fb0, fb1))
+    return best
 
 
 # ---------------------------------------------------------------------------

@@ -318,7 +318,7 @@ herald_rate_40 = CASE["pair_rate"] * e2["p82"]["both_share_40"]
 R["e2b"] = dict(table=heralded, heralded_pairs_per_s_40km=herald_rate_40,
                 demand_rounds_per_s=demand_per_s, supply=supply_rows,
                 memories_claimed=False)
-D.update(demand_per_s=f"{demand_per_s:.2f}", trading_year="252 days × 6.5 hours", fibre_index="c/1.468",
+D.update(demand_per_s=f"{demand_per_s:.2f}", trading_year="252 days × 6.5 hours", fibre_index="c/1.47",
          h_max_ny_lon=f"{supply_rows[2]['h_max']:.0e}",
          herald_rate=f"{herald_rate_40:.0f}",
          heralded_win_full=pct(chsh.heralded_win(1.0, 0.82)))
@@ -367,10 +367,11 @@ md("""
 ## E4 — Frontier map (MAIN FIGURE)
 
 Where on the map of *distance between desks* × *time allowed to decide* could entanglement ever
-pay? We separate three causal states for one classical bit: **physically excluded** (the window
-is shorter than light needs, d/c), **route-dependent** (physics allows it, but the modelled
-straight-line fibre route at c/1.468 is too slow; a faster route might not be, hatched), and
-**arrives on the modelled route** (grey: one bit wins every round). Where no bit arrives on the
+pay? We separate three causal states for one classical bit: **physically excluded** (window
+< d/c: shorter than light needs), **route-dependent** (d/c ≤ window < 1.47·d/c: physics allows it,
+but the modelled straight-line fibre route at c/1.47 is too slow; a faster route might not be,
+hatched), and **classical arrives** (window ≥ 1.47·d/c, grey: one bit wins every round).
+New York–London uses half the Hibernia round-trip benchmark (29.5 ms) as its route latency. Where no bit arrives on the
 modelled route, the coloured bands show whether the modelled *unheralded* strategies can beat 75%.
 """)
 
@@ -396,12 +397,12 @@ matplotlib.rcParams["hatch.color"] = "#5f5e5a"; matplotlib.rcParams["hatch.linew
 ax.contourf(d, w * 1e6, (causal == chsh.CAUSAL_ROUTE_DEPENDENT).astype(float), levels=[0.5, 1.5],
             colors="none", hatches=["////"])
 ax.plot(d, d / c * 1e6, color=INK, lw=1.2)                                   # physical limit d/c
-ax.plot(d, d / chsh.FIBRE_SPEED_KM_S * 1e6, color=INK, lw=1.0, ls="--")      # modelled fibre route
+ax.plot(d, chsh.route_latency_s(d) * 1e6, color=INK, lw=1.0, ls="--")        # modelled fibre route
 ax.set_xlim(1, 1e4); ax.set_ylim(1, 1e5)
 # rotate the boundary label to match the line's on-screen slope
 p1, p2 = ax.transData.transform([(100, 100 / c * 1e6), (1000, 1000 / c * 1e6)])
 angle = math.degrees(math.atan2(p2[1] - p1[1], p2[0] - p1[0]))
-ax.text(180, 180 / chsh.FIBRE_SPEED_KM_S * 1e6 * 1.35, "bit arrives on straight-line fibre (c/1.468)", rotation=angle,
+ax.text(180, 180 / chsh.FIBRE_SPEED_KM_S * 1e6 * 1.35, "bit arrives on straight-line fibre (c/1.47)", rotation=angle,
         rotation_mode="anchor", fontsize=8.5, color=INK, ha="left", va="bottom")
 ax.text(250, 250 / c * 1e6 * 0.62, "physical limit: light-travel time d/c", rotation=angle,
         rotation_mode="anchor", fontsize=8.5, color=INK, ha="left", va="top")
@@ -454,7 +455,7 @@ fig.suptitle("On every route we checked, photon loss or one classical bit beats 
              x=0.08, y=0.985, ha="left", fontsize=12, fontweight="bold")
 fig.text(0.08, -0.145,
          "Distances are approximate straight-line figures. Loss model: unheralded delivery, entangled source at the midpoint, 0.2 dB/km fibre, perfect "
-         "detectors (generous to the startup),\nfixed fallback answer when a photon is missing. Grey uses a straight-line fibre route at c/1.468; "
+         "detectors (generous to the startup),\nfixed fallback answer when a photon is missing. Grey uses a straight-line fibre route at c/1.47; "
          "hatched = physics allows a bit but that route is too slow. Yellow uses Eberhard's 2/3\nefficiency floor (best case, specially tuned states). "
          "Red includes long routes that fall back to exactly 75%. Heralded delivery with quantum memories is not shown (see E2b).",
          fontsize=8, color=INK2, ha="left")
@@ -481,6 +482,24 @@ D.update(ny_lon_light_ms=f"{R['ny_london_light_ms']:.1f} ms", hibernia_one_way=f
          dmax82_round=f"{dmax82:.0f} km", green_us=f"{dmax82 / c * 1e6:.0f} µs")
 for r in landmark_rows:
     print(r)
+
+# Shared-spec state table: causal state name and loss region for each landmark and window.
+# New York-London uses the Hibernia route latency; the metro routes use straight fibre at c/1.47.
+STATE_WINDOWS = [("7.5 µs", 7.5e-6), ("1 ms", 1e-3), ("20 ms", 20e-3), ("100 ms", 100e-3)]
+frontier_states = []
+for name, km in LANDMARKS:
+    rl = HIBERNIA_ONE_WAY_S if "London" in name else None
+    for wlabel, wsec in STATE_WINDOWS:
+        frontier_states.append(dict(
+            landmark=name, km=km, window=wlabel, window_s=wsec,
+            route_latency_s=float(chsh.route_latency_s(km, rl)),
+            causal_state=chsh.CAUSAL_STATE_NAMES[int(chsh.causal_status(km, wsec, rl))],
+            loss_region=chsh.REGION_NAMES[int(chsh.loss_region(km))],
+            frontier_region=chsh.REGION_NAMES[int(chsh.frontier_region(km, wsec, route_latency=rl))]))
+R["frontier_states"] = frontier_states
+print(f"{'landmark':26s} {'window':>7s}  {'causal state':20s} {'loss':6s} frontier")
+for r in frontier_states:
+    print(f"{r['landmark']:26s} {r['window']:>7s}  {r['causal_state']:20s} {r['loss_region']:6s} {r['frontier_region']}")
 ''')
 
 md("""
@@ -491,6 +510,83 @@ benchmarked cable does not. Below ~18.6 ms no bit can arrive, but direct-fibre p
 the modelled quantum strategy at 75%, no better than classical. Every metro route we checked
 (32–56 km) is red whenever the bit cannot arrive. Under the unheralded model, the region where the
 82% strategy wins is a few kilometres wide and, where physics rules out any bit, under ~19 µs tall.
+""")
+
+md("""
+## E4b — Sensitivity: the photon source sits at one desk, not halfway
+
+So far we put the entangled-photon source at the midpoint, so each photon crosses half the
+distance. A real deployment might put the source inside one desk's building instead: that desk's
+photon is (almost) never lost, but the other photon must cross the full distance. This section
+checks whether that placement gives the startup more range or less.
+
+*Model:* near desk η = 1, far desk η_far = det·10^(−0.2·d/10), same fixed fallback (no photon → answer 0).
+Then win = η_far·p_q + (1 − η_far)·0.5, which beats 75% only if η_far > 0.25/(p_q − 0.5): 1/√2 for an ideal
+maximally entangled source. With optimised partially entangled states the known asymmetric bound
+(one perfect detector) is η_far > 1/2. We verify the first with a Monte Carlo that drops only the far
+photon, and the second with a numerical optimiser over partially entangled states.
+""")
+
+code(r'''
+e4b = {}
+for name, p_q in P_LEVELS.items():
+    e_star = chsh.endpoint_eta_threshold(p_q)
+    e4b[name] = dict(p_q=p_q, eta_far_star=e_star, d_max_km=chsh.endpoint_max_separation_km(e_star),
+                     midpoint_d_max_km=e2[name]["d_max_km"])
+e4b["partial"] = dict(eta_far_star=chsh.ENDPOINT_PARTIAL_ETA_FLOOR,
+                      d_max_km=chsh.endpoint_max_separation_km(chsh.ENDPOINT_PARTIAL_ETA_FLOOR),
+                      midpoint_d_max_km=e2["floor_d_max_km"])
+
+# Monte Carlo (singlet sampler, only the far photon is dropped) vs the closed form,
+# at the ideal break-even distance and on the 40 km link.
+mc_rows = []
+for name, p_q in P_LEVELS.items():
+    v = chsh.visibility_for_win(p_q)
+    for d_km in (e4b[name]["d_max_km"], CASE["link_km"]):
+        eta_f = float(chsh.endpoint_fibre_eta(d_km))
+        mc = chsh.simulate_endpoint_lossy(N_MC, eta_f, rng, visibility=v)
+        exact = chsh.endpoint_all_rounds_win(eta_f, p_q)
+        mc_rows.append(dict(source=name, d_km=d_km, eta_far=eta_f, exact=exact, mc=mc, abs_error=abs(mc - exact)))
+e4b["monte_carlo"] = mc_rows
+
+# Partially entangled states cos(t)|HH> + sin(t)|VV>: optimise angles and B's fallback answer.
+partial_rows = []
+for t in (math.pi / 4, 0.5, 0.3, 0.15, 0.05):
+    thr, params = chsh.endpoint_partial_eta_threshold(t, rng, starts=8)
+    partial_rows.append(dict(theta=t, eta_far_star=round(thr, 6),
+                             d_max_km=round(chsh.endpoint_max_separation_km(thr), 4)))
+e4b["partial_numeric"] = partial_rows
+R["e4b"] = e4b
+R["endpoint_source_max_km_max_ent"] = e4b["ideal"]["d_max_km"]
+R["endpoint_source_max_km_82"] = e4b["p82"]["d_max_km"]
+R["endpoint_source_max_km_partial"] = e4b["partial"]["d_max_km"]
+R["midpoint_favours_startup"] = all(e4b[k]["midpoint_d_max_km"] > e4b[k]["d_max_km"]
+                                    for k in ("ideal", "p82", "partial"))
+D.update(endpoint_source_max_km_max_ent=f"{R['endpoint_source_max_km_max_ent']:.1f} km",
+         endpoint_source_max_km_82=f"{R['endpoint_source_max_km_82']:.1f} km",
+         endpoint_source_max_km_partial=f"{R['endpoint_source_max_km_partial']:.1f} km",
+         endpoint_eta_max_ent=f"{e4b['ideal']['eta_far_star']:.3f}",
+         endpoint_eta_82=f"{e4b['p82']['eta_far_star']:.3f}",
+         endpoint_eta_partial="1/2",
+         endpoint_mc_err=f"{100 * max(r['abs_error'] for r in mc_rows):.2f} percentage points")
+
+print(f"{'source':10s} {'eta_far*':>9s} {'endpoint d_max':>15s} {'midpoint d_max':>15s}")
+for k in ("ideal", "p82", "partial"):
+    print(f"{k:10s} {e4b[k]['eta_far_star']:9.4f} {e4b[k]['d_max_km']:13.2f}km {e4b[k]['midpoint_d_max_km']:13.2f}km")
+for r in mc_rows:
+    print(f"MC {r['source']:6s} d={r['d_km']:6.2f} km  exact={r['exact']:.4f}  mc={r['mc']:.4f}")
+for r in partial_rows:
+    print(f"partial theta={r['theta']:.3f}  eta_far*={r['eta_far_star']:.4f}  d_max={r['d_max_km']:.2f} km")
+print("midpoint assumption favours the startup:", R["midpoint_favours_startup"])
+''')
+
+md("""
+**Reading E4b.** The derivation, the Monte Carlo and the optimiser agree: with the source at one desk
+the ideal maximally entangled strategy beats 75% only within about 7.5 km (82% source: about 5.4 km),
+and even optimised partially entangled states stop at about 15.1 km, where the threshold approaches
+1/2 only as the entanglement (and the advantage) shrinks to nothing. All three are shorter than the
+midpoint figures (8.2, 5.7 and 17.6 km), so the midpoint assumption used everywhere else is the one
+that favours the startup. The 40 km link stays red either way.
 """)
 
 md("""
@@ -604,6 +700,9 @@ checks = {
     "cheat_detect":  (1 - 0.25 * 0.5625 / 0.78125, R["e3"]["exact_detected"]),
     "edge":          (200 * 0.07 - 0.079, R["e6"]["edge_claim"]),
     "rounds":        (50e6 / 13.921, R["e6"]["rounds_for_target"]),
+    "endpoint_ideal": (-50 * math.log10(1 / math.sqrt(2)), R["endpoint_source_max_km_max_ent"]),
+    "endpoint_82":   (-50 * math.log10(0.25 / 0.32), R["endpoint_source_max_km_82"]),
+    "endpoint_part": (-50 * math.log10(0.5), R["endpoint_source_max_km_partial"]),
 }
 for k, (hand, lib) in checks.items():
     assert math.isclose(hand, lib, rel_tol=1e-9, abs_tol=1e-12), k

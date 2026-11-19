@@ -137,7 +137,7 @@ def test_causal_status_three_states():
     assert chsh.frontier_region(5570, 0.020, route_latency=hibernia_one_way) != chsh.REGION_GREY
     assert chsh.causal_status(5570, 0.015) == chsh.CAUSAL_EXCLUDED        # faster than light
     assert chsh.causal_status(5570, 0.035, hibernia_one_way) == chsh.CAUSAL_ARRIVES
-    # default modelled route: straight-line fibre at c / 1.468
+    # default modelled route: straight-line fibre at c / 1.47
     d = 100.0
     assert chsh.causal_status(d, 1.2 * d / c) == chsh.CAUSAL_ROUTE_DEPENDENT
     assert chsh.causal_status(d, 1.5 * d / c) == chsh.CAUSAL_ARRIVES
@@ -153,3 +153,66 @@ def test_heralded_supply_is_capped_by_the_link():
     # supply scales with the squared per-desk delivery
     eta = chsh.fibre_eta(40)
     assert chsh.heralded_supply_fraction(40, 1000.0) == pytest.approx(eta**2)
+
+
+def test_causal_boundaries_shared_spec():
+    """Shared spec with site/model.js: excluded if w < d/c; arrives if w >= 1.47 d/c."""
+    c = chsh.SPEED_OF_LIGHT_KM_S
+    assert chsh.FIBRE_GROUP_INDEX == 1.47
+    for d in (1.0, 32.0, 40.0, 56.0, 5570.0):
+        assert chsh.causal_status(d, d / c) == chsh.CAUSAL_ROUTE_DEPENDENT
+        assert chsh.causal_status(d, np.nextafter(d / c, 0)) == chsh.CAUSAL_EXCLUDED
+        assert chsh.causal_status(d, 1.47 * d / c) == chsh.CAUSAL_ARRIVES
+        assert chsh.causal_status(d, np.nextafter(1.47 * d / c, 0)) == chsh.CAUSAL_ROUTE_DEPENDENT
+    # with a route-latency override the same inclusive/exclusive rule applies
+    hib = 58.95e-3 / 2
+    assert chsh.causal_status(5570, hib, hib) == chsh.CAUSAL_ARRIVES
+    assert chsh.causal_status(5570, np.nextafter(hib, 0), hib) == chsh.CAUSAL_ROUTE_DEPENDENT
+    assert chsh.causal_status(5570, 5570 / c, hib) == chsh.CAUSAL_ROUTE_DEPENDENT
+    assert chsh.CAUSAL_STATE_NAMES == {0: "physically_excluded", 1: "route_dependent",
+                                       2: "classical_arrives"}
+
+
+def test_loss_region_matches_frontier_when_no_bit():
+    for d in (3.0, 12.0, 40.0, 5570.0):
+        assert chsh.loss_region(d) == chsh.frontier_region(d, 1e-9)
+    assert chsh.REGION_NAMES[int(chsh.loss_region(40.0))] == "red"
+
+
+def test_endpoint_source_thresholds():
+    ideal = chsh.IDEAL_QUANTUM_WIN
+    assert chsh.endpoint_eta_threshold(ideal) == pytest.approx(1 / math.sqrt(2), abs=1e-12)
+    assert chsh.endpoint_eta_threshold(0.82) == pytest.approx(0.78125, abs=1e-12)
+    for p in (0.82, ideal):
+        assert chsh.endpoint_all_rounds_win(chsh.endpoint_eta_threshold(p), p) == pytest.approx(0.75, abs=1e-12)
+    assert chsh.endpoint_max_separation_km(chsh.endpoint_eta_threshold(ideal)) == pytest.approx(7.5, abs=0.05)
+    assert chsh.endpoint_max_separation_km(chsh.endpoint_eta_threshold(0.82)) == pytest.approx(5.4, abs=0.05)
+    assert chsh.endpoint_max_separation_km(chsh.ENDPOINT_PARTIAL_ETA_FLOOR) == pytest.approx(15.1, abs=0.05)
+    assert chsh.endpoint_fibre_eta(15.0515) == pytest.approx(0.5, abs=1e-5)
+    # the midpoint source tolerates more distance than the endpoint source in every case
+    assert chsh.max_separation_km(chsh.eta_threshold(ideal)) > chsh.endpoint_max_separation_km(1 / math.sqrt(2))
+    assert chsh.max_separation_km(chsh.eta_threshold(0.82)) > chsh.endpoint_max_separation_km(0.78125)
+    assert chsh.max_separation_km(chsh.EBERHARD_FLOOR) > chsh.endpoint_max_separation_km(0.5)
+    # eta_near = 1 reduces to the closed form; eta_near = eta_far = eta matches the midpoint model
+    assert chsh.endpoint_all_rounds_win(0.6, 0.82) == pytest.approx(0.6 * 0.82 + 0.4 * 0.5)
+    assert chsh.endpoint_all_rounds_win(0.4, 0.82, eta_near=0.4) == pytest.approx(chsh.all_rounds_win(0.4, 0.82))
+
+
+def test_endpoint_monte_carlo_matches_formula():
+    rng = np.random.default_rng(5)
+    for d in (7.5, 40.0):
+        eta = chsh.endpoint_fibre_eta(d)
+        mc = chsh.simulate_endpoint_lossy(1_000_000, eta, rng)
+        assert mc == pytest.approx(chsh.endpoint_all_rounds_win(eta, chsh.IDEAL_QUANTUM_WIN), abs=0.002)
+
+
+def test_endpoint_partial_state_threshold_numeric():
+    rng = np.random.default_rng(6)
+    # maximally entangled: optimising angles and fallbacks cannot beat 1/sqrt(2)
+    thr, _ = chsh.endpoint_partial_eta_threshold(math.pi / 4, rng, starts=6)
+    assert thr == pytest.approx(1 / math.sqrt(2), abs=1e-4)
+    # weakly entangled states approach the asymmetric 1/2 floor from above
+    thr, params = chsh.endpoint_partial_eta_threshold(0.05, rng, starts=6)
+    assert 0.5 < thr < 0.502
+    q, f = chsh.endpoint_partial_terms(0.05, params)
+    assert thr * q + (1 - thr) * f == pytest.approx(0.75, abs=1e-9)

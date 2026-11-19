@@ -35,11 +35,11 @@ Columbia COMS 4995W *Lab-to-Market: Quantum and AI Innovation*, Challenge 03 ("T
 | Quantum edge with biased signals (Ding & Jiang Thm 10) | only when signals fire {{adv_lo_pct}}–{{adv_hi_pct}} of the time | `PUBLISHED` + independent check |
 
 **Recommendation: do not invest at this valuation.** The physics is real, but the evidence does not establish a usable,
-profitable coordination service. Under our specified unheralded fibre and fallback model, an {{p_claim}} coincidence-level
-source would achieve about {{win40_82}} across all attempted rounds on a {{link_km}} link, below the free {{classical_max}}
-classical rule; the company's measurement denominator and actual protocol remain unverified. The modelled {{p_claim}}
-unheralded strategy only exceeds the classical baseline below approximately {{dmax_82}}, under idealized assumptions, and
-whenever one classical bit can arrive over the desks' line it wins every round. Heralded delivery with quantum memories has
+profitable coordination service. Under our unheralded fibre model, an {{p_claim}} coincidence-level source
+would win about {{win40_82}} of all attempted rounds on a {{link_km}} link. The company's denominator and protocol remain
+unverified. That is below the free {{classical_max}} classical rule. The modelled {{p_claim}} unheralded strategy exceeds
+the classical baseline only below ~{{dmax_82}}, under idealized assumptions ({{dmax_ideal}} ideal; ~{{dmax_floor}} with
+optimized partially entangled states). Whenever one classical bit can arrive over the desks' line it wins every round. Heralded delivery with quantum memories has
 no fixed distance cutoff but is limited by pair supply; across the Atlantic, direct fibre supplies essentially none.
 
 ![Main figure: where entanglement could pay](figures/main_frontier.png)
@@ -97,7 +97,8 @@ python scripts/build_site.py --out _site && python -m http.server -d _site 8000
 
 `src/chsh.py` → `analysis.ipynb` → `results/results.json` → `deliverables/templates/*.md` (each double-brace placeholder is
 filled by `scripts/render_deliverables.py`) → `scripts/check_numbers.py` (fails CI on any number it cannot trace) →
-PDFs and website. The website reads the same `results.json` at runtime.
+PDFs and website. The website reads the same `results.json` at runtime. The number checker only traces numbers to
+`results.json` and binds templated numbers to named keys; it does not prove each number supports the right claim.
 
 ## Citing, contributing, security
 

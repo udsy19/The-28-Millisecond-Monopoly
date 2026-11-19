@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reproduce · Missing Photon</title>
+<meta name="description" content="Exact commands to reproduce every number, the repository map, how numbers flow and the test suite.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08090b">
+<link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="banner">Static site &middot; every number is read from <code>results/results.json</code></div>
+<header class="nav">
+  <nav aria-label="Primary" class="container-wide nav-bar">
+    <a href="index.html" class="wordmark" aria-label="Missing Photon: home"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="0.5" y="0.5" width="19" height="19" fill="none" stroke="currentColor" stroke-opacity="0.35"/><path d="M10 0.5v19" stroke="currentColor" stroke-opacity="0.35"/><circle cx="5.25" cy="10" r="2.5" fill="currentColor"/><circle cx="14.75" cy="10" r="2.25" fill="none" stroke="currentColor" stroke-dasharray="1.6 1.4"/></svg><span>Missing Photon</span></a>
+    <ul class="nav-links">
+        <li><a href="findings.html">Findings</a></li>
+        <li><a href="exhibit.html">Exhibit</a></li>
+        <li><a href="evidence.html">Evidence</a></li>
+        <li><a href="reproduce.html" aria-current="page">Reproduce</a></li>
+        <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        <li class="nav-sep" aria-hidden="true"></li>
+        <li><a class="btn btn-primary" href="exhibit.html">Open the exhibit</a></li>
+    </ul>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet" aria-label="Open menu">
+      <svg class="i-open" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M2 4.5h12M2 8h12M2 11.5h12" stroke="currentColor" stroke-width="1.25"/></svg>
+      <svg class="i-close" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" style="display:none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.25"/></svg>
+    </button>
+  </nav>
+  <div id="nav-sheet" class="nav-sheet" hidden>
+    <ul class="container-wide">
+        <li><a href="findings.html">Findings</a></li>
+        <li><a href="exhibit.html">Exhibit</a></li>
+        <li><a href="evidence.html">Evidence</a></li>
+        <li><a href="reproduce.html" aria-current="page">Reproduce</a></li>
+        <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        <li><a class="btn btn-primary btn-lg" href="exhibit.html">Open the exhibit</a></li>
+    </ul>
+  </div>
+</header>
+<main id="main">
+<section class="page-head" aria-labelledby="r-title">
+  <div class="container-wide">
+    <p class="label-mono t-subtle">Reproduce / Documentation</p>
+    <h1 id="r-title">Re-run every number from a clean checkout.</h1>
+    <p class="lead">The notebook runs from a fixed seed (<span data-r="seed"></span>) with <span data-r="n_mc"></span> Monte Carlo rounds per check, and re-running it produces a byte-identical <code>results/results.json</code>. Nothing in the writing or on this site is typed by hand.</p>
+  </div>
+</section>
+
+<div class="container-wide docs">
+  <nav class="docs-nav" aria-label="On this page">
+    <div>
+      <p class="label-mono t-subtle">On this page</p>
+      <ul>
+        <li><a href="#commands">Commands</a></li>
+        <li><a href="#site">Build this site</a></li>
+        <li><a href="#map">Repository map</a></li>
+        <li><a href="#flow">How numbers flow</a></li>
+        <li><a href="#tests">Test suite</a></li>
+        <li><a href="#cite">Cite and contribute</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <article class="docs-main prose">
+    <h2 id="commands" style="margin-top:0">Commands</h2>
+    <p>Requirements: Python 3.13; Node 22 for the parity tests, PDFs and screenshots; <code>pandoc</code> for PDFs (no LaTeX).</p>
+    <pre class="code" data-copy><code>git clone https://github.com/udsy19/The-28-Millisecond-Monopoly
+cd The-28-Millisecond-Monopoly</code></pre>
+    <pre class="code" data-copy><code>python3.13 -m venv .venv &amp;&amp; . .venv/bin/activate</code></pre>
+    <pre class="code" data-copy><code>pip install -r requirements.txt</code></pre>
+    <pre class="code" data-copy><code>python -m pytest -q</code></pre>
+    <pre class="code" data-copy><code>scripts/package.sh</code></pre>
+    <p><code>scripts/package.sh</code> re-executes the notebook from a clean kernel, rewrites <code>results/results.json</code>, renders every deliverable from it, checks that every number in the writing is traceable (<code>scripts/check_numbers.py</code>), prints the PDFs into <code>reports/</code> and builds <code>submission.zip</code>.</p>
+
+    <h2 id="site">Build this site</h2>
+    <p>The site is plain HTML, CSS and JavaScript in <code>site/</code>, with no framework and no build step. <code>scripts/build_site.py</code> only assembles the deployable folder: it copies <code>site/</code>, puts <code>results/results.json</code> at <code>data/results.json</code>, copies <code>figures/*.png</code> and <code>reports/*.pdf</code> (warning about any PDF that has not been built), and adds <code>.nojekyll</code>.</p>
+    <pre class="code" data-copy><code>python scripts/build_site.py --out _site &amp;&amp; python -m http.server -d _site 8000</code></pre>
+    <p>Open <code>http://localhost:8000/</code>. Opening the HTML files directly from disk will not work: the pages fetch <code>data/results.json</code>, and they say so instead of showing blanks. GitHub Pages runs the same script from <code>.github/workflows/pages.yml</code>.</p>
+
+    <h2 id="map">Repository map</h2>
+    <div class="tbl-wrap">
+      <table class="tbl tbl-stack">
+        <thead><tr><th scope="col">Path</th><th scope="col">Contents</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Path" class="code">src/chsh.py</td><td data-label="Contents">Pure, documented model: classical brute force, singlet sampling, photon loss, heralding and supply, cheater, causal states, frontier, biased inputs, economics</td></tr>
+          <tr><td data-label="Path" class="code">analysis.ipynb</td><td data-label="Contents">Experiments E1&ndash;E6 and E2b, generated by <code>scripts/build_notebook.py</code>; executed copy <code>analysis_executed.ipynb</code></td></tr>
+          <tr><td data-label="Path" class="code">results/results.json</td><td data-label="Contents">Every computed value (<code>values</code>) and the exact strings the writing uses (<code>display</code>)</td></tr>
+          <tr><td data-label="Path" class="code">figures/</td><td data-label="Contents">Main figure and supporting figures, generated, never hand-edited</td></tr>
+          <tr><td data-label="Path" class="code">deliverables/</td><td data-label="Contents">Phase 1 plan, memo, claims ledger, assumptions, evidence register, steelman and rebuttal, brief, oral script, rendered from <code>deliverables/templates/</code></td></tr>
+          <tr><td data-label="Path" class="code">reports/</td><td data-label="Contents">PDFs of the memo, Phase 1 plan and one-page brief</td></tr>
+          <tr><td data-label="Path" class="code">site/</td><td data-label="Contents">This website; <code>site/model.js</code> is a line-for-line port of <code>src/chsh.py</code></td></tr>
+          <tr><td data-label="Path" class="code">tests/</td><td data-label="Contents">Expected values, Python&ndash;browser parity, site integrity</td></tr>
+          <tr><td data-label="Path" class="code">scripts/</td><td data-label="Contents">Notebook builder, renderer, number checker, PDF build, site build, packaging</td></tr>
+          <tr><td data-label="Path" class="code">review/, DECISIONS.md</td><td data-label="Contents">Independent review and every judgment call</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="flow">How numbers flow</h2>
+    <ol class="flow">
+      <li><div><b>src/chsh.py</b><span>Pure functions, deterministic given their inputs; Monte Carlo takes an explicit seeded generator.</span></div></li>
+      <li><div><b>analysis.ipynb</b><span>Runs experiments E1&ndash;E6 from seed <span data-r="seed"></span> and writes every value and its display string.</span></div></li>
+      <li><div><b>results/results.json</b><span>The single source of truth: <code>values</code> for code, <code>display</code> for writing.</span></div></li>
+      <li><div><b>deliverables/templates/*.md</b><span>Each double-brace placeholder is filled by <code>scripts/render_deliverables.py</code>; an unknown key is an error.</span></div></li>
+      <li><div><b>scripts/check_numbers.py</b><span>Fails CI on any number in the writing it cannot trace to <code>display</code>.</span></div></li>
+      <li><div><b>site/ + data/results.json</b><span>Every page marks numbers as <code>&lt;span data-r="key"&gt;</code>; <code>common.js</code> fills them at load. Interactive values are computed by <code>model.js</code>.</span></div></li>
+    </ol>
+
+    <h2 id="tests">Test suite</h2>
+    <pre class="code" data-copy><code>python -m pytest -q</code></pre>
+    <div class="tbl-wrap">
+      <table class="tbl tbl-stack">
+        <thead><tr><th scope="col">File</th><th scope="col">Checks</th></tr></thead>
+        <tbody>
+          <tr><td data-label="File" class="code">tests/test_chsh.py</td><td data-label="Checks">Expected values from an independent hand derivation: classical limit, Tsirelson bound, photon loss, cheater, causal states, heralded supply, economics</td></tr>
+          <tr><td data-label="File" class="code">tests/test_parity.py</td><td data-label="Checks">Runs <code>site/model.js</code> in Node on a grid of inputs and compares every value with <code>src/chsh.py</code> to 1e-12 (regions exactly)</td></tr>
+          <tr><td data-label="File" class="code">tests/test_site.py</td><td data-label="Checks">Builds the site into a temporary folder; every <code>data-r</code> key exists in <code>display</code>; every relative link resolves; <code>model.js</code> exports its API; parity of the causal and supply functions, including the exact boundary windows</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="cite">Cite and contribute</h2>
+    <p>Cite with <a href="https://github.com/udsy19/The-28-Millisecond-Monopoly/blob/main/CITATION.cff"><code>CITATION.cff</code></a>, and please also cite Ding &amp; Jiang (arXiv:2407.21723) and the other sources on the <a href="evidence.html#sources">evidence page</a>.</p>
+    <pre class="code"><code>The Photon That Didn't Show Up: photon loss and the CHSH trading edge.
+https://github.com/udsy19/The-28-Millisecond-Monopoly</code></pre>
+    <p>Contributions follow <a href="https://github.com/udsy19/The-28-Millisecond-Monopoly/blob/main/CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a>:</p>
+    <ul>
+      <li>Every number comes from code; never type a result into a template or a page.</li>
+      <li>Never weaken a test to make it pass; re-derive, decide which side is wrong, and log it in <code>DECISIONS.md</code>.</li>
+      <li>Change <code>src/chsh.py</code> and <code>site/model.js</code> together; the parity test holds them to 1e-12.</li>
+      <li>Negative results and limitations stay.</li>
+    </ul>
+    <p>Research and teaching material, not investment advice. The startup and its numbers are fictional. MIT licence; the Geist fonts on this site are under the SIL Open Font License (<a href="fonts/OFL.txt">fonts/OFL.txt</a>).</p>
+  </article>
+</div>
+</main>
+<footer class="foot">
+  <div class="container-wide foot-grid">
+    <div class="foot-brand">
+      <a href="index.html" class="wordmark" aria-label="Missing Photon: home"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="0.5" y="0.5" width="19" height="19" fill="none" stroke="currentColor" stroke-opacity="0.35"/><path d="M10 0.5v19" stroke="currentColor" stroke-opacity="0.35"/><circle cx="5.25" cy="10" r="2.5" fill="currentColor"/><circle cx="14.75" cy="10" r="2.25" fill="none" stroke="currentColor" stroke-dasharray="1.6 1.4"/></svg><span>Missing Photon</span></a>
+      <p>An open-source investment-diligence study. Should we invest <span data-r="investment"></span> at <span data-r="pre_money"></span> pre-money in entanglement-based coordination for trading desks? No.</p>
+    </div>
+    <nav aria-label="Footer" class="foot-cols">
+      <div>
+        <p class="label-mono">Study</p>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="findings.html">Findings memo</a></li>
+          <li><a href="evidence.html">Evidence register</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="label-mono">Tools</p>
+        <ul>
+          <li><a href="exhibit.html">Interactive exhibit</a></li>
+          <li><a href="reproduce.html">Reproduce</a></li>
+          <li><a href="data/results.json">results.json</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="label-mono">Source</p>
+        <ul>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly/blob/main/case_file.md">Case file <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly/blob/main/review/review.md">Independent review <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="foot-bar">
+    <div class="container-wide">
+      <span>Research study &middot; not investment advice &middot; built with Claude Code</span>
+      <span class="tnum">seed <span data-r="seed"></span> &middot; <span data-r="n_mc"></span> Monte Carlo rounds</span>
+    </div>
+  </div>
+</footer>
+<script src="common.js"></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Findings · Missing Photon</title>
+<meta name="description" content="The investment memo, main figure, PDF reports and claims ledger.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08090b">
+<link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="banner">Static site &middot; every number is read from <code>results/results.json</code></div>
+<header class="nav">
+  <nav aria-label="Primary" class="container-wide nav-bar">
+    <a href="index.html" class="wordmark" aria-label="Missing Photon: home"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="0.5" y="0.5" width="19" height="19" fill="none" stroke="currentColor" stroke-opacity="0.35"/><path d="M10 0.5v19" stroke="currentColor" stroke-opacity="0.35"/><circle cx="5.25" cy="10" r="2.5" fill="currentColor"/><circle cx="14.75" cy="10" r="2.25" fill="none" stroke="currentColor" stroke-dasharray="1.6 1.4"/></svg><span>Missing Photon</span></a>
+    <ul class="nav-links">
+        <li><a href="findings.html" aria-current="page">Findings</a></li>
+        <li><a href="exhibit.html">Exhibit</a></li>
+        <li><a href="evidence.html">Evidence</a></li>
+        <li><a href="reproduce.html">Reproduce</a></li>
+        <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        <li class="nav-sep" aria-hidden="true"></li>
+        <li><a class="btn btn-primary" href="exhibit.html">Open the exhibit</a></li>
+    </ul>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet" aria-label="Open menu">
+      <svg class="i-open" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M2 4.5h12M2 8h12M2 11.5h12" stroke="currentColor" stroke-width="1.25"/></svg>
+      <svg class="i-close" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" style="display:none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.25"/></svg>
+    </button>
+  </nav>
+  <div id="nav-sheet" class="nav-sheet" hidden>
+    <ul class="container-wide">
+        <li><a href="findings.html" aria-current="page">Findings</a></li>
+        <li><a href="exhibit.html">Exhibit</a></li>
+        <li><a href="evidence.html">Evidence</a></li>
+        <li><a href="reproduce.html">Reproduce</a></li>
+        <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        <li><a class="btn btn-primary btn-lg" href="exhibit.html">Open the exhibit</a></li>
+    </ul>
+  </div>
+</header>
+<main id="main">
+<section class="page-head" aria-labelledby="f-title">
+  <div class="container-prose">
+    <p class="label-mono t-subtle">Findings / Investment memo</p>
+    <h1 id="f-title">The photon that didn't show up.</h1>
+    <p class="lead" style="color:var(--foreground)"><strong>Recommendation: do not invest <span data-r="investment"></span> at a <span data-r="pre_money"></span> pre-money valuation.</strong> The physics is real, but under our model of the startup’s own setup (photons sent unheralded over fibre, a desk that must act on every round), its two headline numbers, <span data-r="p_claim"></span> quantum success and a <span data-r="link_km"></span> fibre link, cannot both hold for a trading desk, and no one has named a trade that pays like the game being sold.</p>
+    <div class="meta-row">
+      <span class="ev" data-kind="exact" data-text="Every number from results.json"></span>
+      <span class="label-mono t-subtle">seed <span data-r="seed"></span></span>
+    </div>
+  </div>
+</section>
+
+<div class="container-prose" style="padding-top:48px">
+  <h2 class="label-mono t-subtle" id="reports">Reports (PDF)</h2>
+  <ul class="doc-links" style="margin-top:12px">
+    <li><a href="reports/memo.pdf" data-pdf>Investment memo <span class="ext" aria-hidden="true">&#8599;</span></a><span class="t-subtle">memo.pdf</span></li>
+    <li><a href="reports/phase1.pdf" data-pdf>Phase 1: hypothesis and plan <span class="ext" aria-hidden="true">&#8599;</span></a><span class="t-subtle">phase1.pdf</span></li>
+    <li><a href="reports/one_page_brief.pdf" data-pdf>One-page brief <span class="ext" aria-hidden="true">&#8599;</span></a><span class="t-subtle">one_page_brief.pdf</span></li>
+  </ul>
+</div>
+
+<article class="container-prose prose" style="padding-top:24px" aria-labelledby="f-title">
+<h2 id="what-is-being-sold-and-what-we-tested">What is being sold, and what we tested</h2>
+<p>The product is a coordination game: two desks each get a yes/no signal and must answer without talking. Entanglement (linked photon pairs shared in advance) lets them coordinate more often than any classical (ordinary, non-quantum) rule. We rebuilt it in code and tested every case-file number.</p>
+<ul>
+<li><strong>The physics checks out.</strong> The best rule without communication wins <span data-r="classical_max"></span> of rounds; the ideal quantum strategy wins <span data-r="ideal_q"></span>. The startup’s own classical demo (<span data-r="p_demo"></span>) is a fair baseline, statistically consistent with <span data-r="classical_max"></span>.</li>
+<li><strong>But the desks already share a private line.</strong> If there is time to send one bit, a simple classical rule wins <span data-r="one_bit"></span> of rounds. Quantum only matters when the decision must be made faster than light can travel between the desks.</li>
+</ul>
+<h2 id="the-finding-photons-go-missing-and-a-desk-cannot-skip-rounds">The finding: photons go missing, and a desk cannot skip rounds</h2>
+<p>A lab throws away rounds where a photon is lost. A trading desk must answer every round, and it cannot tell whether its partner’s photon arrived. On the startup’s own <span data-r="link_km"></span> link only about <span data-r="eta_40_pct"></span> of photons reach each desk, so both arrive in just <span data-r="both_share"></span> of rounds. Counting every round, a source of the startup’s quality wins <strong><span data-r="win40_82"></span></strong>, which is <em>worse</em> than the free <span data-r="classical_max"></span> rule. To beat <span data-r="classical_max"></span>, each desk must receive <span data-r="eta_star_82"></span> of its photons, so the modelled <span data-r="p_claim"></span> strategy only wins below about <strong><span data-r="dmax_82"></span></strong> under idealized assumptions (an ideal source: <span data-r="dmax_ideal"></span>; specially tuned states at Eberhard’s floor: <span data-r="dmax_floor"></span>). Stored, pre-confirmed pairs (heralding) have no fixed distance cutoff, but are limited by pair supply and quantum memories the startup has not claimed.</p>
+<p>So an <span data-r="p_claim"></span> rate on rounds where both photons were detected is consistent with this link; an <span data-r="p_claim"></span> rate over all attempted rounds is not. If the <span data-r="n_trials"></span> trials were both-photon rounds, about <span data-r="attempted"></span> rounds were attempted; the startup’s denominator and protocol are unverified. A purely classical “cheater” that quietly discards some rounds scores exactly <span data-r="cheat_det"></span> with no quantum hardware at all, so the headline proves nothing without the discard count.</p>
+<figure>
+<a href="figures/main_frontier.png"><img src="figures/main_frontier.png" width="1600" height="1000" alt="Frontier map: distance between desks against time allowed to decide, coloured grey, red, yellow and green; green covers only a small corner of short distances and short windows."></a>
+<figcaption>Figure. Distance between desks (across) vs time allowed to decide (up). Grey: one bit arrives on a straight fibre route and wins every round; hatched: physics allows a bit but that route is too slow. Red: too many photons lost to beat the classical rule. Green, where the modelled <span data-r="p_claim"></span> strategy wins, is under <span data-r="dmax_82"></span> apart and, where no bit can arrive at all, under <span data-r="green_us"></span> (millionths of a second). NYSE–Nasdaq scores <span data-r="nasdaq_win"></span> counting every round; New York–London is grey for decisions slower than about <span data-r="hibernia_one_way"></span> (half the Hibernia round-trip benchmark), route-dependent down to <span data-r="ny_lon_light_ms"></span>, and red below that.</figcaption>
+</figure>
+<h2 id="the-money-does-not-add-up-either">The money does not add up either</h2>
+<p>On the startup’s own numbers the edge is <span data-r="edge_claim"></span> per round, so <span data-r="target"></span> a year needs <span data-r="rounds"></span> rounds. Counting every round on the <span data-r="link_km"></span> link, the edge is <strong><span data-r="edge_all_82"></span> per round</strong>: a desk would switch the photons off and take the free <span data-r="classical_max"></span>, so the product is worth nothing there (used as sold, it would lose about <span data-r="annual_loss"></span> a year). The ±<span data-r="payoff"></span> payoff is invented by the case, and <span data-r="target"></span> of profit would be <span data-r="share_pool"></span> of the ~<span data-r="global_pool"></span> a year global equities latency-arbitrage market (traders profiting from being microseconds faster), a generous comparator for block orders. The edge also vanishes unless each desk’s signal fires between <span data-r="adv_lo_pct"></span> and <span data-r="adv_hi_pct"></span> of the time; no trade has been named.</p>
+<h2 id="did-our-hypothesis-survive">Did our hypothesis survive?</h2>
+<p><strong>Yes: the decision (pass) survived, but the reason changed.</strong> We expected the shared private line to settle it: one classical bit beats entanglement whenever there is time to send it, which rules out New York–London. That alone leaves the founders a retreat to faster, closer trades. Photon loss closes it, under our unheralded model: in the only window where the bit cannot arrive in time, the photons do not arrive either. The evidence does not show a usable, profitable service; it does not disprove every possible version of one.</p>
+<h2 id="questions-for-the-founders">Questions for the founders</h2>
+<ol>
+<li>Over what link, and from how many attempted rounds, were the <span data-r="n_trials"></span> trials scored?</li>
+<li>What is the end-to-end efficiency per desk (fibre, optics and detectors)?</li>
+<li>Which real trade has this payoff, and how often is each signal seen?</li>
+<li>What does the protocol do when one photon is missing?</li>
+<li>Can you sell without licensing the earlier patent on coordinating non-communicating parties (Szegedy, Ding &amp; Shi), i.e. do you have freedom to operate?</li>
+</ol>
+<h2 id="what-would-reopen-the-deal">What would reopen the deal</h2>
+<ul>
+<li>Logs of <em>every</em> attempted round showing better than <span data-r="classical_max"></span> between desks too far apart for a bit to arrive in time.</li>
+<li>Heralded delivery with quantum memories (stored photons plus a signal confirming both arrived), with pair supply shown for the actual route: not claimed, and no help over direct transatlantic fibre.</li>
+<li>A named trade with signals inside the window and a payoff tied to real profit and loss, at a research-stage valuation.</li>
+</ul>
+<h2 id="a-pivot-worth-testing-unproven-hypothesis">A pivot worth testing</h2>
+<p><span class="ev" data-kind="unproven"></span></p>
+<p>The hardware may suit markets where entanglement <em>is</em> the product: certified randomness (provably unpredictable random numbers, already shown on a quantum computer by Liu et al.) or device-independent key distribution (encryption keys secure even on untrusted hardware). These still need high photon efficiency, but they do not have to beat a classical bit or match a trade. A hypothesis to test, not a proven market.</p>
+<h2 id="limitations">Limitations</h2>
+<p>Our loss model is simple (a desk missing its photon plays a fixed answer); cleverer fallbacks lower the bar, but never past the best case we report (<span data-r="dmax_floor"></span>). Perfect detectors are generous to the startup. The <span data-r="race_window"></span> race window comes from equity latency arbitrage, a different market from block orders; we use it only as the fastest documented decision time. We modelled fibre only, not satellites. The payoff and the <span data-r="target"></span> claim are the case’s own and could not be checked against a real trade.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Ding &amp; Jiang, “Coordinating Decisions via Quantum Telepathy,” arXiv:2407.21723: NYSE–Nasdaq hedging model, fibre insufficient, the 2/3 efficiency floor, nonuniform-input theorem.</li>
+<li>Szegedy, Ding &amp; Shi, US Patent 11676104B2: coordinating decisions between non-communicating parties.</li>
+<li>Mermin (1986); Eberhard, Phys. Rev. A 47, R747 (1993): 82.8% and 66.7% detection-efficiency thresholds.</li>
+<li>Hibernia Express (2015): New York–London round trip under 58.95 ms.</li>
+<li>Aquilina, Budish &amp; O’Neill, QJE 137(1), 2022: latency races last ~5–10 µs; ~$5B a year globally.</li>
+<li>Liu et al., Nature 640, 343 (2025): certified randomness on a quantum computer, 71,313 bits.</li>
+</ul>
+<hr>
+<p class="t-subtle" style="font-size:0.875rem"><em>Experiment: <code>analysis.ipynb</code> (executed copy <code>analysis_executed.html</code>), fixed seed <span data-r="seed"></span>, <span data-r="n_mc"></span> simulated rounds per Monte Carlo check; every number above is read from <code>results/results.json</code>.</em></p>
+</article>
+
+<section class="container-content" style="padding-top:96px;padding-bottom:128px" aria-labelledby="ledger">
+  <div class="split" style="margin-bottom:32px">
+    <p class="label-mono">Claims ledger</p>
+    <div class="sec-title">
+      <h2 id="ledger" style="font-size:1.75rem;line-height:1.2;letter-spacing:-0.024em">One row per case-file number.</h2>
+      <p class="lead">“Treat every number in a case file as a claim someone made.” One row per case-file number: the claim, how we chose to read it, what we ran, the result (from <code>results/results.json</code>), and our verdict.</p>
+    </div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl tbl-stack"><caption>Every value is filled from <code>results.json</code>. Verdicts are ours; the claim column quotes the case file.</caption>
+<thead>
+<tr>
+<th scope="col">Claim (case file)</th>
+<th scope="col">Our reading</th>
+<th scope="col">Test</th>
+<th scope="col">Result</th>
+<th scope="col">Verdict</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td data-label="Claim (case file)">Valuation: <span data-r="pre_money"></span> pre-money, <span data-r="investment"></span> sought</td><td data-label="Our reading">Priced as a company with a working trading product (<span data-r="post_money"></span> post-money, <span data-r="stake"></span> stake)</td><td data-label="Test">Whole analysis: does a trading product exist?</td><td data-label="Result">No trading route we checked supports the product (E2, E4)</td><td data-label="Verdict"><strong>Too high</strong> for a research-stage hardware team</td></tr>
+<tr><td data-label="Claim (case file)">Quantum success, measured: <span data-r="p_claim"></span></td><td data-label="Our reading">Win rate on rounds where <strong>both</strong> photons were detected (lab-style coincidence counting), unless logs show otherwise</td><td data-label="Test">E1 z-score vs <span data-r="classical_max"></span>; E2 all-rounds model on the <span data-r="link_km"></span> link; E3 classical cheater</td><td data-label="Result">z = <span data-r="z_82"></span>σ above <span data-r="classical_max"></span>; all-rounds win on the link would be <span data-r="win40_82"></span>; a classical cheater that discards rounds also scores <span data-r="cheat_det"></span> (keeping <span data-r="cheat_kept"></span> of rounds)</td><td data-label="Verdict"><strong>Real but post-selected.</strong> Statistically significant on detected rounds; not achievable on every round</td></tr>
+<tr><td data-label="Claim (case file)">Classical demo, run by startup: <span data-r="p_demo"></span></td><td data-label="Our reading">Win rate of the startup’s best classical strategy</td><td data-label="Test">E1 brute force of all 16 rules; z-score</td><td data-label="Result">Max classical = <span data-r="classical_max"></span>; z = <span data-r="z_74"></span>σ; <span data-r="ci_level"></span> interval <span data-r="ci_74"></span> contains <span data-r="classical_max"></span></td><td data-label="Verdict"><strong>Fair baseline.</strong> Consistent with the true classical limit, not a straw man</td></tr>
+<tr><td data-label="Claim (case file)">Trials: <span data-r="n_trials"></span> per protocol</td><td data-label="Our reading"><span data-r="n_trials"></span> <em>scored</em> rounds, i.e. coincidences, not attempted rounds</td><td data-label="Test">E2: both-photon share on the link</td><td data-label="Result">Both photons arrive in <span data-r="both_share"></span> of rounds, so about <span data-r="attempted"></span> attempted rounds would be needed</td><td data-label="Verdict"><strong>Ambiguous.</strong> Ask for the attempted-round count (founder question 1)</td></tr>
+<tr><td data-label="Claim (case file)">Payoff: ±<span data-r="payoff"></span> per round</td><td data-label="Our reading">Invented by the case; we take it at face value</td><td data-label="Test">E6 edge per round; E5 biased-signal sensitivity</td><td data-label="Result">Edge = <span data-r="edge_claim"></span> per round on claimed numbers; <span data-r="edge_all_82"></span> counting every round; advantage only if signals fire <span data-r="adv_lo_pct"></span>–<span data-r="adv_hi_pct"></span> of the time</td><td data-label="Verdict"><strong>Unsupported.</strong> No real trade has been named with this payoff</td></tr>
+<tr><td data-label="Claim (case file)">Operating cost: <span data-r="cost_q"></span> quantum vs <span data-r="cost_c"></span> classical per round</td><td data-label="Our reading">Running cost per scored round</td><td data-label="Test">E6 edge per round</td><td data-label="Result">Cost gap is a small part of the edge (<span data-r="edge_claim"></span> per round)</td><td data-label="Verdict"><strong>Plausible but immaterial</strong>; the win rate decides the economics</td></tr>
+<tr><td data-label="Claim (case file)">Claimed annual opportunity: <span data-r="target"></span></td><td data-label="Our reading">Net profit per year from the service</td><td data-label="Test">E6 rounds needed and market share</td><td data-label="Result">Needs <span data-r="rounds"></span> rounds a year; equals <span data-r="share_pool"></span> of the ~<span data-r="global_pool"></span> a year global latency-arbitrage market</td><td data-label="Verdict"><strong>Implausible</strong> for a first product; and negative on every-round accounting (<span data-r="annual_loss"></span> a year loss at that volume)</td></tr>
+<tr><td data-label="Claim (case file)">First service: New York–London block orders</td><td data-label="Our reading">Desks ~<span data-r="ny_lon_km"></span> apart; block-order decision window not stated</td><td data-label="Test">E4 frontier map with three causal states</td><td data-label="Result">Decisions slower than <span data-r="hibernia_one_way"></span> (half the Hibernia round-trip benchmark): one bit arrives and wins every round. Between <span data-r="ny_lon_light_ms"></span> and <span data-r="hibernia_one_way"></span>: route-dependent. Faster than <span data-r="ny_lon_light_ms"></span>: no bit can arrive, but direct-fibre loss leaves quantum at <span data-r="classical_max"></span>, and heralded supply over direct fibre is essentially zero</td><td data-label="Verdict"><strong>Fails in every window:</strong> either the bit wins, or quantum is no better than classical</td></tr>
+<tr><td data-label="Claim (case file)">Customer infrastructure: shared private low-latency line</td><td data-label="Our reading">The desks can already exchange bits</td><td data-label="Test">E1 one-bit strategy</td><td data-label="Result">One-bit rule wins <span data-r="one_bit"></span> of rounds</td><td data-label="Verdict"><strong>Decisive against</strong> whenever the decision window exceeds the line’s latency</td></tr>
+<tr><td data-label="Claim (case file)">Link: <span data-r="link_km"></span> fibre at <span data-r="pair_rate"></span> pairs/s</td><td data-label="Our reading">Source at the midpoint, <span data-r="fibre_loss"></span> fibre, perfect detectors; <span data-r="pair_rate"></span> pairs/s <em>generated</em> at the source</td><td data-label="Test">E2 photon-loss model + Monte Carlo; E6 pair budget</td><td data-label="Result">Per-desk efficiency <span data-r="eta_40"></span>; all-rounds win <span data-r="win40_ideal"></span> even with an ideal source; break-even needs <span data-r="eta_star_82"></span> per desk, i.e. at most <span data-r="dmax_82"></span> apart; pair rate supplies the claimed volume in <span data-r="hours_generated"></span></td><td data-label="Verdict"><strong>Contradicts the <span data-r="p_claim"></span> for trading use.</strong> Pair rate is not the bottleneck; loss is</td></tr>
+<tr><td data-label="Claim (case file)">Team: national-lab founders, three patents filed</td><td data-label="Our reading">Filings, not grants; scope unknown</td><td data-label="Test">Prior-art check against listed sources</td><td data-label="Result">US Patent 11676104B2 (Szegedy, Ding &amp; Shi) is titled for coordinating decisions between non-communicating parties; we have not compared its claims with the startup’s filings</td><td data-label="Verdict"><strong>Open question.</strong> Freedom to operate must be shown (founder question 5)</td></tr>
+</tbody>
+</table></div>
+  <p class="gloss" style="margin-top:16px">See the <a class="link-btn" href="evidence.html">evidence register</a> for every experiment and source behind these verdicts.</p>
+</section>
+</main>
+<footer class="foot">
+  <div class="container-wide foot-grid">
+    <div class="foot-brand">
+      <a href="index.html" class="wordmark" aria-label="Missing Photon: home"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="0.5" y="0.5" width="19" height="19" fill="none" stroke="currentColor" stroke-opacity="0.35"/><path d="M10 0.5v19" stroke="currentColor" stroke-opacity="0.35"/><circle cx="5.25" cy="10" r="2.5" fill="currentColor"/><circle cx="14.75" cy="10" r="2.25" fill="none" stroke="currentColor" stroke-dasharray="1.6 1.4"/></svg><span>Missing Photon</span></a>
+      <p>An open-source investment-diligence study. Should we invest <span data-r="investment"></span> at <span data-r="pre_money"></span> pre-money in entanglement-based coordination for trading desks? No.</p>
+    </div>
+    <nav aria-label="Footer" class="foot-cols">
+      <div>
+        <p class="label-mono">Study</p>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="findings.html">Findings memo</a></li>
+          <li><a href="evidence.html">Evidence register</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="label-mono">Tools</p>
+        <ul>
+          <li><a href="exhibit.html">Interactive exhibit</a></li>
+          <li><a href="reproduce.html">Reproduce</a></li>
+          <li><a href="data/results.json">results.json</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="label-mono">Source</p>
+        <ul>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly/blob/main/case_file.md">Case file <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly/blob/main/review/review.md">Independent review <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="foot-bar">
+    <div class="container-wide">
+      <span>Research study &middot; not investment advice &middot; built with Claude Code</span>
+      <span class="tnum">seed <span data-r="seed"></span> &middot; <span data-r="n_mc"></span> Monte Carlo rounds</span>
+    </div>
+  </div>
+</footer>
+<script src="common.js"></script>
+</body>
+</html>

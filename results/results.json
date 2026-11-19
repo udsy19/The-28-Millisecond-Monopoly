@@ -224,6 +224,252 @@
     "ny_london_light_ms": 18.57952010253707,
     "hibernia_rtt_ms": 58.95,
     "hibernia_one_way_ms": 29.475,
+    "frontier_states": [
+      {
+        "landmark": "Carteret–Secaucus",
+        "km": 32.0,
+        "window": "7.5 µs",
+        "window_s": 7.5e-06,
+        "route_latency_s": 0.00015690855038121072,
+        "causal_state": "physically_excluded",
+        "loss_region": "red",
+        "frontier_region": "red"
+      },
+      {
+        "landmark": "Carteret–Secaucus",
+        "km": 32.0,
+        "window": "1 ms",
+        "window_s": 0.001,
+        "route_latency_s": 0.00015690855038121072,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "Carteret–Secaucus",
+        "km": 32.0,
+        "window": "20 ms",
+        "window_s": 0.02,
+        "route_latency_s": 0.00015690855038121072,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "Carteret–Secaucus",
+        "km": 32.0,
+        "window": "100 ms",
+        "window_s": 0.1,
+        "route_latency_s": 0.00015690855038121072,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "Startup 40 km test link",
+        "km": 40.0,
+        "window": "7.5 µs",
+        "window_s": 7.5e-06,
+        "route_latency_s": 0.0001961356879765134,
+        "causal_state": "physically_excluded",
+        "loss_region": "red",
+        "frontier_region": "red"
+      },
+      {
+        "landmark": "Startup 40 km test link",
+        "km": 40.0,
+        "window": "1 ms",
+        "window_s": 0.001,
+        "route_latency_s": 0.0001961356879765134,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "Startup 40 km test link",
+        "km": 40.0,
+        "window": "20 ms",
+        "window_s": 0.02,
+        "route_latency_s": 0.0001961356879765134,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "Startup 40 km test link",
+        "km": 40.0,
+        "window": "100 ms",
+        "window_s": 0.1,
+        "route_latency_s": 0.0001961356879765134,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "NYSE–Nasdaq",
+        "km": 56.0,
+        "window": "7.5 µs",
+        "window_s": 7.5e-06,
+        "route_latency_s": 0.00027458996316711876,
+        "causal_state": "physically_excluded",
+        "loss_region": "red",
+        "frontier_region": "red"
+      },
+      {
+        "landmark": "NYSE–Nasdaq",
+        "km": 56.0,
+        "window": "1 ms",
+        "window_s": 0.001,
+        "route_latency_s": 0.00027458996316711876,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "NYSE–Nasdaq",
+        "km": 56.0,
+        "window": "20 ms",
+        "window_s": 0.02,
+        "route_latency_s": 0.00027458996316711876,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "NYSE–Nasdaq",
+        "km": 56.0,
+        "window": "100 ms",
+        "window_s": 0.1,
+        "route_latency_s": 0.00027458996316711876,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      },
+      {
+        "landmark": "New York–London",
+        "km": 5570.0,
+        "window": "7.5 µs",
+        "window_s": 7.5e-06,
+        "route_latency_s": 0.029475,
+        "causal_state": "physically_excluded",
+        "loss_region": "red",
+        "frontier_region": "red"
+      },
+      {
+        "landmark": "New York–London",
+        "km": 5570.0,
+        "window": "1 ms",
+        "window_s": 0.001,
+        "route_latency_s": 0.029475,
+        "causal_state": "physically_excluded",
+        "loss_region": "red",
+        "frontier_region": "red"
+      },
+      {
+        "landmark": "New York–London",
+        "km": 5570.0,
+        "window": "20 ms",
+        "window_s": 0.02,
+        "route_latency_s": 0.029475,
+        "causal_state": "route_dependent",
+        "loss_region": "red",
+        "frontier_region": "red"
+      },
+      {
+        "landmark": "New York–London",
+        "km": 5570.0,
+        "window": "100 ms",
+        "window_s": 0.1,
+        "route_latency_s": 0.029475,
+        "causal_state": "classical_arrives",
+        "loss_region": "red",
+        "frontier_region": "grey"
+      }
+    ],
+    "e4b": {
+      "ideal": {
+        "p_q": 0.8535533905932737,
+        "eta_far_star": 0.7071067811865476,
+        "d_max_km": 7.525749891599529,
+        "midpoint_d_max_km": 8.174568967388183
+      },
+      "p82": {
+        "p_q": 0.82,
+        "eta_far_star": 0.7812500000000001,
+        "d_max_km": 5.360498482393415,
+        "midpoint_d_max_km": 5.690485133647257
+      },
+      "partial": {
+        "eta_far_star": 0.5,
+        "d_max_km": 15.05149978319906,
+        "midpoint_d_max_km": 17.609125905568128
+      },
+      "monte_carlo": [
+        {
+          "source": "ideal",
+          "d_km": 7.525749891599529,
+          "eta_far": 0.7071067811865476,
+          "exact": 0.75,
+          "mc": 0.749764,
+          "abs_error": 0.00023600000000001398
+        },
+        {
+          "source": "ideal",
+          "d_km": 40.0,
+          "eta_far": 0.15848931924611134,
+          "exact": 0.5560344361922824,
+          "mc": 0.555716,
+          "abs_error": 0.00031843619228244524
+        },
+        {
+          "source": "p82",
+          "d_km": 5.360498482393415,
+          "eta_far": 0.7812500000000001,
+          "exact": 0.75,
+          "mc": 0.750322,
+          "abs_error": 0.00032200000000004447
+        },
+        {
+          "source": "p82",
+          "d_km": 40.0,
+          "eta_far": 0.15848931924611134,
+          "exact": 0.5507165821587556,
+          "mc": 0.550914,
+          "abs_error": 0.000197417841244385
+        }
+      ],
+      "partial_numeric": [
+        {
+          "theta": 0.7853981633974483,
+          "eta_far_star": 0.707107,
+          "d_max_km": 7.5257
+        },
+        {
+          "theta": 0.5,
+          "eta_far_star": 0.599634,
+          "d_max_km": 11.1057
+        },
+        {
+          "theta": 0.3,
+          "eta_far_star": 0.54065,
+          "d_max_km": 13.3542
+        },
+        {
+          "theta": 0.15,
+          "eta_far_star": 0.510932,
+          "d_max_km": 14.5818
+        },
+        {
+          "theta": 0.05,
+          "eta_far_star": 0.501246,
+          "d_max_km": 14.9975
+        }
+      ]
+    },
+    "endpoint_source_max_km_max_ent": 7.525749891599529,
+    "endpoint_source_max_km_82": 5.360498482393415,
+    "endpoint_source_max_km_partial": 15.05149978319906,
+    "midpoint_favours_startup": true,
     "e5": {
       "gap_at_half": 0.10355339059327373,
       "advantage_lo": 0.29289321881345254,
@@ -302,7 +548,7 @@
     "loss_010": "0.1 dB/km",
     "demand_per_s": "0.61",
     "trading_year": "252 days × 6.5 hours",
-    "fibre_index": "c/1.468",
+    "fibre_index": "c/1.47",
     "h_max_ny_lon": "7e-109",
     "herald_rate": "158",
     "heralded_win_full": "82.0%",
@@ -316,6 +562,13 @@
     "nasdaq_light_us": "187 µs",
     "dmax82_round": "6 km",
     "green_us": "19 µs",
+    "endpoint_source_max_km_max_ent": "7.5 km",
+    "endpoint_source_max_km_82": "5.4 km",
+    "endpoint_source_max_km_partial": "15.1 km",
+    "endpoint_eta_max_ent": "0.707",
+    "endpoint_eta_82": "0.781",
+    "endpoint_eta_partial": "1/2",
+    "endpoint_mc_err": "0.03 percentage points",
     "gap_half": "10.4 percentage points",
     "adv_lo": "0.29",
     "adv_hi": "0.71",

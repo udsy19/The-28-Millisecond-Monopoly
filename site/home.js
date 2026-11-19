@@ -8,7 +8,8 @@
   var M = window.CHSH;
   var C = M.SPEED_OF_LIGHT_KM_S;
   var RACE_MID_S = 7.5e-6;   // midpoint of the 5-10 us race band (E4 uses region_at_7_5us)
-  var BLOCK_S = 0.1;         // block-order decision window; assumption A15 only needs > one-way cable latency
+  var BLOCK_S = 0.1;         // an illustrative block-order window, slower than the Hibernia-derived 29.5 ms
+  var CAUSAL = ["Physically excluded", "Route-dependent", "Arrives on modelled route"];
   var REGION = ["Grey", "Red", "Yellow", "Green"];
   var REGION_LONG = [
     "Grey: one classical bit arrives in time and wins every round",
@@ -45,10 +46,11 @@
           " of fibre at " + D.fibre_loss + "." },
       nasdaq: { d: lm["NYSE–Nasdaq"].km, w: RACE_MID_S, wName: "race window",
         note: "The hedging route Ding & Jiang model. Past about " + D.worst_km + " both photons are usually lost and the desks drift back toward the classical rule, so it scores slightly above the 40 km link and still loses." },
-      london: { d: V.inputs.ny_london_km, w: BLOCK_S, wName: "block-order window",
-        note: "The startup's launch route. A block order is not a microsecond race: the window is longer than the " + D.hibernia_one_way + " one-way cable latency (assumption A15), so one bit gets there first." },
+      london: { d: V.inputs.ny_london_km, w: BLOCK_S, wName: "block-order window", route: V.hibernia_one_way_ms / 1000,
+        note: "The startup's launch route; no decision window is stated. Slower than " + D.hibernia_one_way + " (half the 2015 Hibernia round-trip benchmark, not a measured one-way service) one bit arrives. Between " +
+          D.ny_lon_light_ms + " and " + D.hibernia_one_way + " it is route-dependent; faster than " + D.ny_lon_light_ms + " no bit can arrive, but direct-fibre loss leaves quantum at " + D.classical_max + "." },
       inside: { d: halfGreen, w: RACE_MID_S, wName: "race window",
-        note: "Half the " + D.dmax_82 + " break-even distance for a source of the startup's quality: the kind of place where the product could work. No trading route we checked is this close." },
+        note: "Half the " + D.dmax_82 + " break-even distance: the modelled " + D.p_claim + " unheralded strategy only exceeds the classical baseline below ~" + D.dmax_82 + ", under idealized assumptions. No route we checked is this close." },
       _pq: pq
     };
   }
@@ -58,8 +60,10 @@
     var s = S[id], pq = S._pq;
     var eta = M.fibre_eta(s.d);
     var win = M.all_rounds_win(eta, pq);
-    var region = M.frontier_region(s.d, s.w, pq, 1.0);
-    return { s: s, eta: eta, both: eta * eta, win: win, region: region, light: s.d / C, edge: M.edge_per_round(win) };
+    var region = M.frontier_region(s.d, s.w, pq, 1.0, s.route);
+    var causal = M.causal_status(s.d, s.w, s.route);
+    return { s: s, eta: eta, both: eta * eta, win: win, region: region, causal: causal, light: s.d / C,
+      routeT: M.route_latency_s(s.d, s.route), edge: M.edge_per_round(win) };
   }
 
   function renderReadouts(r) {
@@ -67,7 +71,7 @@
     $("ro-main-label").textContent = grey ? "Win rate · one classical bit" : "Win rate · every round counted";
     $("ro-main").textContent = grey ? D.one_bit : pct(r.win, 1);
     $("ro-main-sub").textContent = grey
-      ? "Light needs " + dur(r.light) + " to cross; the " + r.s.wName + " is longer, so desk A's bit arrives first. Entanglement, every round: " + pct(r.win, 1) + "."
+      ? "The modelled route needs " + dur(r.routeT) + "; the " + r.s.wName + " is longer, so desk A's bit arrives first. Entanglement, every round: " + pct(r.win, 1) + "."
       : (r.win > M.CLASSICAL_MAX
         ? "Beats the free classical rule (" + D.classical_max + ") by " + (100 * (r.win - M.CLASSICAL_MAX)).toFixed(1) + " points."
         : "Below the free classical rule (" + D.classical_max + "). A desk would switch the photons off.");
@@ -81,6 +85,7 @@
     $("ro-light").textContent = dur(r.light) + " / " + dur(r.s.w);
     $("ro-light-dt").textContent = "Light between desks / " + r.s.wName;
     $("ro-edge").textContent = grey ? "n/a" : money(r.edge);
+    $("ro-causal").textContent = CAUSAL[r.causal];
     $("ro-region").innerHTML = '<span class="region-word"><span class="sw ' + SW[r.region] + '" aria-hidden="true"></span>' + REGION[r.region] + "</span>";
     var mc = $("ro-mc-row");
     if (current === "startup") {
@@ -199,6 +204,7 @@
     if (!cv) return;
     window.Frontier.draw(cv, {
       pq: S._pq, det: 1.0, marker: null, raceLabel: D.race_window, key: "home",
+      points: [{ d: V.inputs.ny_london_km, w: V.hibernia_one_way_ms / 1000, label: ["NY–LON " + D.hibernia_one_way, "FROM 2015 HIBERNIA ROUND TRIP"] }],
       landmarks: [
         { name: "Startup " + D.link_km, km: V.inputs.link_km, dash: true },
         { name: "NYSE–Nasdaq", km: S.nasdaq.d },
@@ -218,7 +224,8 @@
         '<td class="num" data-label="Light time">' + esc(dur(l.light_time_us * 1e-6)) + "</td>" +
         '<td class="num" data-label="Every-round win">' + esc(pct(l.win_all_rounds_82, 1)) + "</td>" +
         '<td data-label="At the race window"><span class="region-word"><span class="sw ' + SW[l.region_at_7_5us] + '" aria-hidden="true"></span>' + REGION[l.region_at_7_5us] + "</span></td>" +
-        '<td data-label="At a 1 ms window"><span class="region-word"><span class="sw ' + SW[l.region_at_1ms] + '" aria-hidden="true"></span>' + REGION[l.region_at_1ms] + "</span></td></tr>";
+        '<td data-label="At a 1 ms window"><span class="region-word"><span class="sw ' + SW[l.region_at_1ms] + '" aria-hidden="true"></span>' + REGION[l.region_at_1ms] + "</span></td>" +
+        '<td data-label="One bit at 20 ms">' + (typeof l.causal_at_20ms === "number" ? CAUSAL[l.causal_at_20ms] : "n/a") + "</td></tr>";
     }).join("");
   }
 
@@ -242,13 +249,13 @@
       "<p>The instrument reads its inputs from <code>data/results.json</code>, which did not load. " +
       "Build the site with <code>python scripts/build_site.py</code> and serve the output over HTTP.</p></div>";
     $("inst-diagram").innerHTML = msg;
-    ["ro-main", "ro-eta", "ro-both", "ro-light", "ro-edge", "ro-region"].forEach(function (id) {
+    ["ro-main", "ro-eta", "ro-both", "ro-light", "ro-edge", "ro-region", "ro-causal"].forEach(function (id) {
       var e = $(id); if (e) { e.textContent = "n/a"; e.classList.add("r-missing"); }
     });
     var mb = $("home-map");
     if (mb) mb.parentNode.innerHTML = msg;
     var tb = $("route-rows");
-    if (tb) tb.innerHTML = '<tr><td colspan="6" class="r-missing">Route values unavailable: results.json did not load.</td></tr>';
+    if (tb) tb.innerHTML = '<tr><td colspan="7" class="r-missing">Route values unavailable: results.json did not load.</td></tr>';
   }
 
   window.Results.ready.then(function (d) {

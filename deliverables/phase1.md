@@ -13,7 +13,7 @@
 | E1 | Brute-force all 16 classical rules; z-scores for the 82% and 74% claims; simulate the quantum strategy; check the one-bit rule | Is the physics claim real and the demo statistically meaningful? |
 | E2 | Photon-loss model on fibre, with a Monte Carlo that actually drops photons; detector sensitivity; heralded-delivery rescue case | Does the advantage survive when a desk must answer every round? |
 | E3 | Classical "cheater" that discards rounds | Can a quantum-looking score be faked without quantum hardware? |
-| E4 | Frontier map: desk distance × decision window (main figure) | Where, if anywhere, can quantum pay? Where do real routes fall? |
+| E4 | Frontier map: desk distance × decision window (main figure) | Where, if anywhere, can quantum pay? Where do the routes we check fall? |
 | E5 | Biased signals (Ding & Jiang, Theorem 10) | Does the edge survive signals that aren't 50/50? |
 | E6 | Economics of the claimed $50M | Does the business case hold on the startup's own numbers? |
 

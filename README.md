@@ -35,11 +35,11 @@ Columbia COMS 4995W *Lab-to-Market: Quantum and AI Innovation*, Challenge 03 ("T
 | Quantum edge with biased signals (Ding & Jiang Thm 10) | only when signals fire 29%–71% of the time | `PUBLISHED` + independent check |
 
 **Recommendation: do not invest at this valuation.** The physics is real, but the evidence does not establish a usable,
-profitable coordination service. Under our specified unheralded fibre and fallback model, an 82% coincidence-level
-source would achieve about 64.1% across all attempted rounds on a 40 km link, below the free 75%
-classical rule; the company's measurement denominator and actual protocol remain unverified. The modelled 82%
-unheralded strategy only exceeds the classical baseline below approximately 5.7 km, under idealized assumptions, and
-whenever one classical bit can arrive over the desks' line it wins every round. Heralded delivery with quantum memories has
+profitable coordination service. Under our unheralded fibre model, an 82% coincidence-level source
+would win about 64.1% of all attempted rounds on a 40 km link. The company's denominator and protocol remain
+unverified. That is below the free 75% classical rule. The modelled 82% unheralded strategy exceeds
+the classical baseline only below ~5.7 km, under idealized assumptions (8.2 km ideal; ~17.6 km with
+optimized partially entangled states). Whenever one classical bit can arrive over the desks' line it wins every round. Heralded delivery with quantum memories has
 no fixed distance cutoff but is limited by pair supply; across the Atlantic, direct fibre supplies essentially none.
 
 ![Main figure: where entanglement could pay](figures/main_frontier.png)
@@ -97,7 +97,8 @@ python scripts/build_site.py --out _site && python -m http.server -d _site 8000
 
 `src/chsh.py` → `analysis.ipynb` → `results/results.json` → `deliverables/templates/*.md` (each double-brace placeholder is
 filled by `scripts/render_deliverables.py`) → `scripts/check_numbers.py` (fails CI on any number it cannot trace) →
-PDFs and website. The website reads the same `results.json` at runtime.
+PDFs and website. The website reads the same `results.json` at runtime. The number checker only traces numbers to
+`results.json` and binds templated numbers to named keys; it does not prove each number supports the right claim.
 
 ## Citing, contributing, security
 

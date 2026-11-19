@@ -12,13 +12,17 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  var SPEED_OF_LIGHT_KM_S = 299792.458;   // vacuum
+  var SPEED_OF_LIGHT_KM_S = 299792.458;   // vacuum: the earliest any signal can arrive
+  var FIBRE_GROUP_INDEX = 1.468;           // standard single-mode fibre at 1550 nm
+  var FIBRE_SPEED_KM_S = SPEED_OF_LIGHT_KM_S / FIBRE_GROUP_INDEX;   // ~204,000 km/s
   var FIBRE_LOSS_DB_PER_KM = 0.2;          // telecom fibre at 1550 nm
   var EBERHARD_FLOOR = 2.0 / 3.0;          // lowest efficiency any CHSH-type test tolerates
   var IDEAL_QUANTUM_WIN = Math.pow(Math.cos(Math.PI / 8), 2);  // Tsirelson, ~0.8536
   var CLASSICAL_MAX = 0.75;
 
   var REGION_GREY = 0, REGION_RED = 1, REGION_YELLOW = 2, REGION_GREEN = 3;
+  // Causal status of one classical bit sent from desk A to desk B after the inputs arrive.
+  var CAUSAL_EXCLUDED = 0, CAUSAL_ROUTE_DEPENDENT = 1, CAUSAL_ARRIVES = 2;
 
   function def(v, d) { return v === undefined ? d : v; }
 
@@ -48,6 +52,16 @@
     return -20.0 / loss_db_per_km * Math.log10(eta_needed / detector_eff);
   }
 
+  /* E2b: largest heralded fraction h the link can actually supply (perfect memories at best). */
+  function heralded_supply_fraction(d_km, rounds_per_s, pair_rate, detector_eff, memory_eff) {
+    pair_rate = def(pair_rate, 1000.0);
+    detector_eff = def(detector_eff, 1.0);
+    memory_eff = def(memory_eff, 1.0);
+    var per_desk = fibre_eta(d_km, undefined, detector_eff) * memory_eff;
+    var supply = pair_rate * Math.pow(per_desk, 2);
+    return Math.min(1.0, supply / rounds_per_s);
+  }
+
   /* E2b: heralded delivery (quantum memories). Founder-rescue scenario, not claimed. */
   function heralded_win(h, p_q) {
     return h * p_q + (1 - h) * CLASSICAL_MAX;
@@ -73,35 +87,57 @@
     return biased_classical(p);
   }
 
-  /* E4: classify a (separation, decision window) point. Scalar version. */
-  function frontier_region(d_km, window_s, p_demo, detector_eff, c_km_s) {
+  /* E4: one-way latency of the modelled classical route (default: straight-line fibre at c/1.468).
+     A quoted route_latency (seconds) replaces it, but nothing is faster than light. */
+  function route_latency_s(d_km, route_latency) {
+    var modelled = (route_latency === undefined || route_latency === null) ? d_km / FIBRE_SPEED_KM_S : route_latency;
+    return Math.max(modelled, d_km / SPEED_OF_LIGHT_KM_S);
+  }
+
+  /* E4: can one classical bit reach the other desk within the window? */
+  function causal_status(d_km, window_s, route_latency) {
+    var status = CAUSAL_ROUTE_DEPENDENT;
+    if (window_s <= d_km / SPEED_OF_LIGHT_KM_S) status = CAUSAL_EXCLUDED;
+    if (window_s > route_latency_s(d_km, route_latency)) status = CAUSAL_ARRIVES;
+    return status;
+  }
+
+  /* E4: classify a (separation, decision window) point. Scalar version.
+     Grey = the bit arrives on the modelled route; otherwise the unheralded photon-loss model decides. */
+  function frontier_region(d_km, window_s, p_demo, detector_eff, route_latency) {
     p_demo = def(p_demo, 0.82);
     detector_eff = def(detector_eff, 1.0);
-    c_km_s = def(c_km_s, SPEED_OF_LIGHT_KM_S);
     var eta = fibre_eta(d_km, undefined, detector_eff);
     var region = REGION_RED;
     if (eta > EBERHARD_FLOOR) region = REGION_YELLOW;
     if (eta > eta_threshold(p_demo)) region = REGION_GREEN;
-    if (window_s > d_km / c_km_s) region = REGION_GREY;
+    if (causal_status(d_km, window_s, route_latency) === CAUSAL_ARRIVES) region = REGION_GREY;
     return region;
   }
 
   return {
     SPEED_OF_LIGHT_KM_S: SPEED_OF_LIGHT_KM_S,
+    FIBRE_GROUP_INDEX: FIBRE_GROUP_INDEX,
+    FIBRE_SPEED_KM_S: FIBRE_SPEED_KM_S,
     FIBRE_LOSS_DB_PER_KM: FIBRE_LOSS_DB_PER_KM,
     EBERHARD_FLOOR: EBERHARD_FLOOR,
     IDEAL_QUANTUM_WIN: IDEAL_QUANTUM_WIN,
     CLASSICAL_MAX: CLASSICAL_MAX,
     REGION_GREY: REGION_GREY, REGION_RED: REGION_RED,
     REGION_YELLOW: REGION_YELLOW, REGION_GREEN: REGION_GREEN,
+    CAUSAL_EXCLUDED: CAUSAL_EXCLUDED, CAUSAL_ROUTE_DEPENDENT: CAUSAL_ROUTE_DEPENDENT,
+    CAUSAL_ARRIVES: CAUSAL_ARRIVES,
     fibre_eta: fibre_eta,
     all_rounds_win: all_rounds_win,
     eta_threshold: eta_threshold,
     max_separation_km: max_separation_km,
+    heralded_supply_fraction: heralded_supply_fraction,
     heralded_win: heralded_win,
     edge_per_round: edge_per_round,
     biased_classical: biased_classical,
     biased_quantum: biased_quantum,
+    route_latency_s: route_latency_s,
+    causal_status: causal_status,
     frontier_region: frontier_region
   };
 });

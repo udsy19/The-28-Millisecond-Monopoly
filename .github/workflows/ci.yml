@@ -1,0 +1,28 @@
+name: scientific-reproducibility
+on:
+  push:
+    branches: [main, "build/**", "agent/**"]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Unit tests
+        run: PYTHONPATH=src python -m unittest discover -s tests -v
+      - name: Reproduce figures, tables and memo
+        run: PYTHONPATH=src python -m monopoly build --out artifacts
+      - name: Verify scientific caveats and deliverables
+        run: python scripts/verify_deliverables.py --dir artifacts
+      - name: Archive scientific evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: scientific-evidence
+          path: artifacts/

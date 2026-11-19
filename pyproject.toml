@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "the-28-millisecond-monopoly"
+version = "0.1.0"
+description = "Reproducible CHSH, causality, optical-loss, and investment due diligence"
+requires-python = ">=3.11"
+authors = [{name = "Udaya Vijay Anand"}]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+monopoly = "monopoly.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"

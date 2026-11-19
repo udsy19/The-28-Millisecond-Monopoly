@@ -1,0 +1,17 @@
+{
+  "ny_london_geodesic_km": 5570.0,
+  "fibre_refractive_index": 1.468,
+  "fibre_attenuation_db_per_km": 0.2,
+  "historic_round_trip_ms": 58.95,
+  "historic_latency_reference_year": 2015,
+  "source_pair_rate_hz_for_illustration": 1000.0,
+  "source_rate_mode": "optimistic_source_rate_not_verified_case_observation",
+  "detected_pairs_per_second_threshold_for_illustration": 1.0,
+  "assumed_business_rounds_per_year": 4000000,
+  "annual_seconds_assumed": 31536000,
+  "hypothetical_no_communication_quantum_win_rate": 0.82,
+  "quantum_fair_sample_independently_verified": false,
+  "repeater_architecture_proven": false,
+  "real_trading_payoff_mapping_proven": false,
+  "all_distances_are_sensitivity_parameters_not_proposed_cable_routes": true
+}

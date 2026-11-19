@@ -1,0 +1,24 @@
+{
+  "_provenance": "Fictional Columbia COMS 4995W Lab-to-Market Hackathon, Session 11, Challenge 03, 2026-11-19, page 4",
+  "valuation_pre_money_usd": 25000000,
+  "investment_sought_usd": 3000000,
+  "quantum_win_rate": 0.82,
+  "startup_classical_win_rate": 0.74,
+  "trials_per_protocol": 1000,
+  "success_payout_usd": 100.0,
+  "failure_payout_usd": -100.0,
+  "quantum_operating_cost_per_round_usd": 0.08,
+  "classical_operating_cost_per_round_usd": 0.001,
+  "claimed_annual_opportunity_usd": 50000000,
+  "first_service": "Coordinating block orders between New York and London desks",
+  "customer_has_private_low_latency_line": true,
+  "demonstration_link_km": 40.0,
+  "reported_pair_rate_hz": 1000.0,
+  "pair_rate_location_unspecified": true,
+  "notes": [
+    "Case data are fictional; reported observations and operating costs are claims, not independently validated.",
+    "The case does not specify whether 1,000 trials means issued rounds or post-selected coincidences.",
+    "Pair rate source/emitted versus received not specified.",
+    "Patent applications do not prove defensibility, licensing, or product-market fit."
+  ]
+}

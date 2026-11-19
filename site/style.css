@@ -722,3 +722,4 @@ input[type="range"]:disabled { opacity: 0.4; cursor: not-allowed; }
 .ev-wrap { white-space: normal; align-items: flex-start; }
 .ev-wrap::before { margin-top: 3px; }
 @media (max-width: 639px) { .ev { white-space: normal; } }
+.foot-brand .wordmark { justify-self: start; }

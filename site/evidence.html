@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence · Missing Photon</title>
+<meta name="description" content="Evidence register: every case-file claim with its verdict, our experiments, modelling assumptions and sources.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08090b">
+<link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="banner">Static site &middot; every number is read from <code>results/results.json</code></div>
+<header class="nav">
+  <nav aria-label="Primary" class="container-wide nav-bar">
+    <a href="index.html" class="wordmark" aria-label="Missing Photon: home"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="0.5" y="0.5" width="19" height="19" fill="none" stroke="currentColor" stroke-opacity="0.35"/><path d="M10 0.5v19" stroke="currentColor" stroke-opacity="0.35"/><circle cx="5.25" cy="10" r="2.5" fill="currentColor"/><circle cx="14.75" cy="10" r="2.25" fill="none" stroke="currentColor" stroke-dasharray="1.6 1.4"/></svg><span>Missing Photon</span></a>
+    <ul class="nav-links">
+        <li><a href="findings.html">Findings</a></li>
+        <li><a href="exhibit.html">Exhibit</a></li>
+        <li><a href="evidence.html" aria-current="page">Evidence</a></li>
+        <li><a href="reproduce.html">Reproduce</a></li>
+        <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        <li class="nav-sep" aria-hidden="true"></li>
+        <li><a class="btn btn-primary" href="exhibit.html">Open the exhibit</a></li>
+    </ul>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet" aria-label="Open menu">
+      <svg class="i-open" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M2 4.5h12M2 8h12M2 11.5h12" stroke="currentColor" stroke-width="1.25"/></svg>
+      <svg class="i-close" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" style="display:none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.25"/></svg>
+    </button>
+  </nav>
+  <div id="nav-sheet" class="nav-sheet" hidden>
+    <ul class="container-wide">
+        <li><a href="findings.html">Findings</a></li>
+        <li><a href="exhibit.html">Exhibit</a></li>
+        <li><a href="evidence.html" aria-current="page">Evidence</a></li>
+        <li><a href="reproduce.html">Reproduce</a></li>
+        <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        <li><a class="btn btn-primary btn-lg" href="exhibit.html">Open the exhibit</a></li>
+    </ul>
+  </div>
+</header>
+<main id="main">
+<section class="page-head" aria-labelledby="e-title">
+  <div class="container-wide">
+    <p class="label-mono t-subtle">Evidence / Register, assumptions, sources</p>
+    <h1 id="e-title">Every claim, every test, every source.</h1>
+    <p class="lead">"Treat every number in a case file as a claim someone made." Here is each one with our verdict, the experiments and published work behind it, the modelling assumptions and whom each favours.</p>
+    <dl class="hero-aside" style="max-width:60ch">
+      <div><dt class="label-mono">Strength</dt><dd>How far we trust an item <em>for the investment question</em>, not whether the science is right.</dd></div>
+      <div><dt class="label-mono">Effect</dt><dd>Supports means it helps the startup's case; against means it hurts it.</dd></div>
+      <div><dt class="label-mono">Labels</dt><dd><span class="ev" data-kind="claim"></span> &nbsp; <span class="ev" data-kind="exact"></span> &nbsp; <span class="ev" data-kind="monte-carlo"></span> &nbsp; <span class="ev" data-kind="published"></span> &nbsp; <span class="ev" data-kind="assumption"></span></dd></div>
+    </dl>
+  </div>
+</section>
+<section class="section" id="verdicts" aria-labelledby="verdicts-title" style="padding:72px 0">
+  <div class="container-wide">
+    <header class="sec-head">
+      <div class="sec-num"><span class="pixel" aria-hidden="true">01</span><span class="label-mono">Case-file claims</span></div>
+      <div class="sec-title">
+        <h2 id="verdicts-title" style="font-size:2.25rem"><span class="sr-only">01. </span>One verdict per case-file number.</h2>
+        <p class="lead">From the claims ledger. The full reading, test and result for each row are on the <a class="link-btn" href="findings.html#ledger">findings page</a>.</p>
+      </div>
+    </header>
+    <div class="sec-body" style="margin-top:48px">
+<ol class="rows rows-3"></ol>
+    </div>
+  </div>
+</section>
+<section class="section" id="register" aria-labelledby="register-title" style="padding:72px 0">
+  <div class="container-wide">
+    <header class="sec-head">
+      <div class="sec-num"><span class="pixel" aria-hidden="true">02</span><span class="label-mono">Evidence register</span></div>
+      <div class="sec-title">
+        <h2 id="register-title" style="font-size:2.25rem"><span class="sr-only">02. </span>What each item shows, and how much it moves the decision.</h2>
+        <p class="lead">The lab result may be real. The trading product is not supported. The decisive item is B4: on the startup’s own <span data-r="link_km"></span> link, counting every round, quantum loses to the free <span data-r="classical_max"></span> rule. Everything else (B3, B9, B10, B11, B13) points the same way.</p>
+      </div>
+    </header>
+    <div class="sec-body" style="margin-top:48px">
+<div class="tbl-wrap"><table class="tbl tbl-stack"><caption>A. Claims the startup made to us, and what our experiments did to each.</caption>
+<thead>
+<tr>
+<th scope="col">#</th>
+<th scope="col">Claim or evidence item</th>
+<th scope="col">Source type</th>
+<th scope="col">What it shows</th>
+<th scope="col">Strength</th>
+<th scope="col">Effect on the decision</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td data-label="#">A1</td><td data-label="Claim or evidence item">Quantum strategy wins <span data-r="p_claim"></span> of rounds</td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">A score above the <span data-r="classical_max"></span> classical ceiling over <span data-r="n_trials"></span> trials. The file does not say whether lost-photon rounds were counted.</td><td data-label="Strength">Moderate as physics, weak as a product claim</td><td data-label="Effect on the decision">Neutral until the counting rule is disclosed. See E1, E2, E3.</td></tr>
+<tr><td data-label="#">A2</td><td data-label="Claim or evidence item">Classical demo wins <span data-r="p_demo"></span></td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">The startup’s own classical baseline.</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision">Mildly supportive of their honesty: <span data-r="p_demo"></span> is a fair baseline, not a straw man (E1).</td></tr>
+<tr><td data-label="#">A3</td><td data-label="Claim or evidence item"><span data-r="link_km"></span> test link</td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">The distance their demo ran over.</td><td data-label="Strength">Strong (a plain fact)</td><td data-label="Effect on the decision"><strong>Strongly against.</strong> At this distance, counting every round, quantum wins less than <span data-r="classical_max"></span> (E2).</td></tr>
+<tr><td data-label="#">A4</td><td data-label="Claim or evidence item"><span data-r="n_trials"></span> entangled pairs per second</td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">The pair-generation rate.</td><td data-label="Strength">Moderate</td><td data-label="Effect on the decision">Neutral. The rate is not the bottleneck (E6).</td></tr>
+<tr><td data-label="#">A5</td><td data-label="Claim or evidence item"><span data-r="payoff"></span> payoff per round won or lost; costs of <span data-r="cost_q"></span> (quantum) and <span data-r="cost_c"></span> (classical) per round</td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">The startup’s own unit economics.</td><td data-label="Strength">Weak. The payoff is invented and tied to no named trade.</td><td data-label="Effect on the decision">Against. The numbers only work if the <span data-r="p_claim"></span> holds on every round (E6).</td></tr>
+<tr><td data-label="#">A6</td><td data-label="Claim or evidence item"><span data-r="target"></span> a year revenue target</td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">Ambition, sized against a <span data-r="global_pool"></span> pie.</td><td data-label="Strength">Weak</td><td data-label="Effect on the decision">Against. It is <span data-r="share_pool"></span> of the whole global latency-arbitrage pie (E6).</td></tr>
+<tr><td data-label="#">A7</td><td data-label="Claim or evidence item">First product: New York ↔︎ London (<span data-r="ny_lon_km"></span>)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">The launch route.</td><td data-label="Strength">Strong (a plain fact)</td><td data-label="Effect on the decision"><strong>Strongly against.</strong> One classical bit over the existing line wins <span data-r="one_bit"></span> (E1, E4).</td></tr>
+<tr><td data-label="#">A8</td><td data-label="Claim or evidence item">Three patent filings</td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">Claimed intellectual property.</td><td data-label="Strength">Weak (filings, not grants)</td><td data-label="Effect on the decision">Slightly against. There is a freedom-to-operate question over US Patent 11676104B2 (external, B6).</td></tr>
+<tr><td data-label="#">A9</td><td data-label="Claim or evidence item"><span data-r="investment"></span> at <span data-r="pre_money"></span> pre-money</td><td data-label="Source type"><span class="ev ev-xs" data-kind="claim"></span><br><span class="t-subtle">Case file</span></td><td data-label="What it shows">Price: <span data-r="stake"></span> for <span data-r="investment"></span>.</td><td data-label="Strength">Strong (a plain fact)</td><td data-label="Effect on the decision">The price assumes a product the evidence does not support.</td></tr>
+</tbody>
+</table></div><div class="gap-top"></div><div class="tbl-wrap"><table class="tbl tbl-stack"><caption>B. Our experiments (E1–E6, E2b in <code>analysis.ipynb</code>); outputs in <code>results.json</code>.</caption>
+<thead>
+<tr>
+<th scope="col">#</th>
+<th scope="col">Claim or evidence item</th>
+<th scope="col">Source type</th>
+<th scope="col">What it shows</th>
+<th scope="col">Strength</th>
+<th scope="col">Effect on the decision</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td data-label="#">B1</td><td data-label="Claim or evidence item">The classical ceiling is <span data-r="classical_max"></span></td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E1</span></td><td data-label="What it shows">We tried every fixed rule. None beats <span data-r="classical_max"></span>.</td><td data-label="Strength">Strong (exhaustive check)</td><td data-label="Effect on the decision">Confirms the startup’s benchmark is the right one.</td></tr>
+<tr><td data-label="#">B2</td><td data-label="Claim or evidence item"><span data-r="p_claim"></span> is statistically real</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E1</span></td><td data-label="What it shows"><span data-r="p_claim"></span> over <span data-r="n_trials"></span> trials sits <span data-r="z_82"></span> standard errors above <span data-r="classical_max"></span>. The <span data-r="p_demo"></span> demo sits <span data-r="z_74"></span> standard errors from <span data-r="classical_max"></span> (range <span data-r="ci_74"></span>).</td><td data-label="Strength">Strong, <em>if</em> every round was counted</td><td data-label="Effect on the decision">Supports the startup on the lab result only.</td></tr>
+<tr><td data-label="#">B3</td><td data-label="Claim or evidence item">One classical bit wins <span data-r="one_bit"></span></td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E1</span></td><td data-label="What it shows">If one desk can send a single bit before the other answers, they win every round.</td><td data-label="Strength">Strong (exact)</td><td data-label="Effect on the decision"><strong>Kills any route where the decision window is longer than the light-travel time</strong>, including New York–London.</td></tr>
+<tr><td data-label="#">B4</td><td data-label="Claim or evidence item"><strong>Photon loss on the <span data-r="link_km"></span> link</strong></td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E2</span></td><td data-label="What it shows">Only <span data-r="eta_40_pct"></span> of photons reach each desk. Both arrive in only <span data-r="both_share"></span> of rounds. Counting every round, the startup’s <span data-r="p_claim"></span> source wins <span data-r="win40_82"></span>; even a perfect source wins <span data-r="win40_ideal"></span>. Both are below <span data-r="classical_max"></span>.</td><td data-label="Strength">Strong. A Monte Carlo that really drops photons matches the formula.</td><td data-label="Effect on the decision"><strong>Lead finding. Strongly against.</strong> The <span data-r="p_claim"></span> headline and the <span data-r="link_km"></span> link cannot both hold for a trading desk.</td></tr>
+<tr><td data-label="#">B5</td><td data-label="Claim or evidence item">Break-even distance</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E2</span></td><td data-label="What it shows">Each desk needs <span data-r="eta_star_82"></span> of its photons (<span data-r="p_claim"></span> source) or <span data-r="eta_star_ideal"></span> (perfect source). That means desks within <span data-r="dmax_82"></span> or <span data-r="dmax_ideal"></span>. Even the best-case <span data-r="eberhard_floor"></span> floor allows only <span data-r="dmax_floor"></span>.</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision">Against. Every metro route we checked is further apart (unheralded model).</td></tr>
+<tr><td data-label="#">B6</td><td data-label="Claim or evidence item">Detector sensitivity</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E2</span></td><td data-label="What it shows">With realistic, slightly imperfect detectors the <span data-r="p_claim"></span> break-even distance shrinks to <span data-r="dmax_82_det09"></span>.</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision">Against. Our base case is generous to the startup.</td></tr>
+<tr><td data-label="#">B7</td><td data-label="Claim or evidence item">How the <span data-r="p_claim"></span> may have been counted</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E2</span></td><td data-label="What it shows">If the <span data-r="n_trials"></span> trials were only rounds where both photons were detected, about <span data-r="attempted"></span> rounds were attempted.</td><td data-label="Strength">Moderate (an inference, not a fact)</td><td data-label="Effect on the decision">Against, pending logs. A both-photons-detected rate is consistent with this link; the company&rsquo;s denominator and protocol remain unverified.</td></tr>
+<tr><td data-label="#">B8</td><td data-label="Claim or evidence item">Founder rescue: heralding with quantum memories</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E2b</span></td><td data-label="What it shows">If memories store photons and a signal confirms arrival before the round, lost pairs cost nothing. The win rate never drops below <span data-r="classical_max"></span>, and reaches <span data-r="heralded_win_full"></span> if every round is heralded. On <span data-r="link_km"></span> that leaves about <span data-r="herald_rate"></span> confirmed pairs a second.</td><td data-label="Strength">Moderate (a model of technology the startup does not have)</td><td data-label="Effect on the decision">Partly supportive in principle. But memories are not claimed, and it does nothing for New York–London.</td></tr>
+<tr><td data-label="#">B9</td><td data-label="Claim or evidence item">A classical cheater scores <span data-r="p_claim"></span></td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E3</span></td><td data-label="What it shows">With no entanglement, desks that are allowed to drop rounds score <span data-r="p_claim"></span> on the rounds they keep. They keep <span data-r="cheat_kept"></span> of rounds and win <span data-r="classical_max"></span> over all rounds.</td><td data-label="Strength">Strong (exact)</td><td data-label="Effect on the decision">Against. An <span data-r="p_claim"></span> alone proves nothing without the count of attempted and discarded rounds.</td></tr>
+<tr><td data-label="#">B10</td><td data-label="Claim or evidence item">Frontier map</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E4 (<code>figures/main_frontier.png</code>)</span></td><td data-label="What it shows">Under the unheralded fibre model, the <span data-r="p_claim"></span> strategy beats <span data-r="classical_max"></span> only below ~<span data-r="dmax_82"></span> and, where no bit can arrive at all, ~<span data-r="light_us_82"></span>; the one-bit boundary is split into physically excluded, route-dependent and arrives. Carteret–Secaucus scores <span data-r="win40_82"></span> and NYSE–Nasdaq <span data-r="nasdaq_win"></span> on every-round accounting. New York–London: above ~<span data-r="hibernia_one_way"></span> one bit arrives over existing cable; below <span data-r="ny_lon_light_ms"></span> none can, but direct-fibre loss leaves quantum at <span data-r="classical_max"></span>.</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision"><strong>Strongly against.</strong> None of the routes we checked is green.</td></tr>
+<tr><td data-label="#">B11</td><td data-label="Claim or evidence item">Signals must be balanced</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E5</span></td><td data-label="What it shows">The edge is <span data-r="gap_half"></span> at best, with 50/50 signals. It vanishes if a signal fires less than <span data-r="adv_lo_pct"></span> or more than <span data-r="adv_hi_pct"></span> of the time.</td><td data-label="Strength">Strong (checked against brute force and a numerical optimiser)</td><td data-label="Effect on the decision">Against. No trade has been named, so we cannot check this.</td></tr>
+<tr><td data-label="#">B12</td><td data-label="Claim or evidence item">Economics on the startup’s terms</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E6</span></td><td data-label="What it shows">At <span data-r="p_claim"></span> the edge is <span data-r="edge_claim"></span> a round. <span data-r="target"></span> needs <span data-r="rounds"></span> rounds, which is <span data-r="hours_delivered"></span> of delivered rounds or <span data-r="hours_generated"></span> of generated pairs.</td><td data-label="Strength">Moderate (payoff invented)</td><td data-label="Effect on the decision">Neutral. Volume and rate are not the problem.</td></tr>
+<tr><td data-label="#">B13</td><td data-label="Claim or evidence item">Economics on every-round accounting</td><td data-label="Source type"><span class="ev ev-xs" data-kind="exact"></span><br><span class="t-subtle">E6</span></td><td data-label="What it shows">On the <span data-r="link_km"></span> link the edge is <span data-r="edge_all_82"></span> a round. At the target volume that is a loss of about <span data-r="annual_loss"></span> a year.</td><td data-label="Strength">Moderate (payoff invented)</td><td data-label="Effect on the decision"><strong>Strongly against.</strong></td></tr>
+</tbody>
+</table></div><div class="gap-top"></div><div class="tbl-wrap"><table class="tbl tbl-stack"><caption>C. Published work. Strength is how far we trust the item for the investment question.</caption>
+<thead>
+<tr>
+<th scope="col">#</th>
+<th scope="col">Claim or evidence item</th>
+<th scope="col">Source type</th>
+<th scope="col">What it shows</th>
+<th scope="col">Strength</th>
+<th scope="col">Effect on the decision</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td data-label="#">C1</td><td data-label="Claim or evidence item">Ding &amp; Jiang, “Coordinating Decisions via Quantum Telepathy” (preprint)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (preprint)</span></td><td data-label="What it shows">A toy NYSE–Nasdaq hedging model at about <span data-r="nasdaq_km"></span>. It finds fibre insufficient and gives the <span data-r="eberhard_floor"></span> efficiency floor and the uneven-signals result (Theorem 10) we use in E5.</td><td data-label="Strength">Moderate (one preprint, not peer reviewed)</td><td data-label="Effect on the decision">Against. Independent authors reach the same fibre conclusion.</td></tr>
+<tr><td data-label="#">C2</td><td data-label="Claim or evidence item">Mermin (1986); Eberhard (1993)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (peer reviewed)</span></td><td data-label="What it shows">Detection-efficiency thresholds of <span data-r="eta_star_ideal"></span> (standard strategy) and <span data-r="eberhard_floor"></span> (best case).</td><td data-label="Strength">Strong (textbook)</td><td data-label="Effect on the decision">Against. These set the break-even distances in E2.</td></tr>
+<tr><td data-label="#">C3</td><td data-label="Claim or evidence item">Yin et al. (2017), Micius satellite</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (peer reviewed)</span></td><td data-label="What it shows">Entanglement over more than a thousand kilometres, at about 1.1 pairs per second.</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision">Against for trading. Long distance is possible, but the rate is tiny, and the bit problem (E1) still applies.</td></tr>
+<tr><td data-label="#">C4</td><td data-label="Claim or evidence item">Craddock et al. (2024)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (peer reviewed)</span></td><td data-label="What it shows">About 5×10⁵ pairs per second over a New York City fibre link close to the startup’s distance (see Sources).</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision">Mixed. Metro rates are fine, but rate does not fix loss on every-round accounting (E2).</td></tr>
+<tr><td data-label="#">C5</td><td data-label="Claim or evidence item">Neumann et al. (2022)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (peer reviewed)</span></td><td data-label="What it shows">Entanglement distributed over hundreds of kilometres of deployed fibre (see Sources).</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision">Neutral. It is a distribution result. It does not answer the every-round problem.</td></tr>
+<tr><td data-label="#">C6</td><td data-label="Claim or evidence item">Szegedy, Ding &amp; Shi, US patent (see Sources)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (patent)</span></td><td data-label="What it shows">An earlier patent titled for coordinating decisions between parties that cannot communicate. We have not compared its claims with the startup’s filings.</td><td data-label="Strength">Moderate</td><td data-label="Effect on the decision">Against. A possible freedom-to-operate risk (whether the startup can sell without a licence) for the startup’s three filings.</td></tr>
+<tr><td data-label="#">C7</td><td data-label="Claim or evidence item">Hibernia Express (2015)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (industry)</span></td><td data-label="What it shows">A New York (NY4) to London (LD4) round trip under <span data-r="herald_rtt"></span>, about <span data-r="hibernia_one_way"></span> one way.</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision">Against. The desks already have a fast private line, so one bit wins (E1, E4).</td></tr>
+<tr><td data-label="#">C8</td><td data-label="Claim or evidence item">Aquilina, Budish &amp; O’Neill (2022)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (peer reviewed)</span></td><td data-label="What it shows">Equity latency races last about <span data-r="race_window"></span>, worth about <span data-r="global_pool"></span> a year globally. A different market from block orders: context, not demand for this product.</td><td data-label="Strength">Strong</td><td data-label="Effect on the decision">Against. The race window sits on our map, but none of the routes we checked is green at that height (E4). The <span data-r="target"></span> target is <span data-r="share_pool"></span> of the whole pie (E6).</td></tr>
+<tr><td data-label="#">C9</td><td data-label="Claim or evidence item">Liu et al. (2025)</td><td data-label="Source type"><span class="ev ev-xs" data-kind="published"></span><br><span class="t-subtle">External (peer reviewed)</span></td><td data-label="What it shows">Certified randomness produced on a quantum computer (not photons; see Sources).</td><td data-label="Strength">Moderate (as a market signal)</td><td data-label="Effect on the decision">Supports a possible pivot, not this product.</td></tr>
+</tbody>
+</table></div>
+    </div>
+  </div>
+</section>
+<section class="section" id="assumptions" aria-labelledby="assumptions-title" style="padding:72px 0">
+  <div class="container-wide">
+    <header class="sec-head">
+      <div class="sec-num"><span class="pixel" aria-hidden="true">03</span><span class="label-mono">Assumptions</span></div>
+      <div class="sec-title">
+        <h2 id="assumptions-title" style="font-size:2.25rem"><span class="sr-only">03. </span>Every modelling choice, and whom it favours.</h2>
+        <p class="lead">Each assumption, why it is reasonable, and whom it favours. “Startup” means the assumption makes the startup look better than reality probably would; “us” means it strengthens our case against investing.</p>
+      </div>
+    </header>
+    <div class="sec-body" style="margin-top:48px">
+<div class="tbl-wrap"><table class="tbl tbl-stack"><caption>Startup: the assumption makes the startup look better than reality probably would. Us: it strengthens our case against investing.</caption>
+<thead>
+<tr>
+<th scope="col">#</th>
+<th scope="col">Assumption</th>
+<th scope="col">Why it is reasonable</th>
+<th scope="col">Favours</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td data-label="#">A1</td><td data-label="Assumption">The game is standard CHSH with uniform, independent input bits</td><td data-label="Why it is reasonable">That is how the case file defines it</td><td data-label="Favours">Neutral (E5 relaxes it)</td></tr>
+<tr><td data-label="#">A2</td><td data-label="Assumption">Ideal quantum win rate is <span data-r="ideal_q"></span> (Tsirelson bound); the startup’s source quality is <span data-r="p_claim"></span> when both photons arrive</td><td data-label="Why it is reasonable">Textbook physics; we read the <span data-r="p_claim"></span> as a coincidence-only rate</td><td data-label="Favours">Startup (we credit them the full <span data-r="p_claim"></span>)</td></tr>
+<tr><td data-label="#">A3</td><td data-label="Assumption">Source quality below ideal is modelled as white noise mixed into a perfect singlet</td><td data-label="Why it is reasonable">Standard, simple noise model; reproduces <span data-r="p_claim"></span> exactly</td><td data-label="Favours">Neutral</td></tr>
+<tr><td data-label="#">A4</td><td data-label="Assumption">Photons reach each desk independently with efficiency η; a desk whose photon is lost plays the fixed answer 0</td><td data-label="Why it is reasonable">A trading desk must answer every round and cannot see its partner’s detector</td><td data-label="Favours">Us, slightly: smarter fallbacks exist, so we also report the best-case floor</td></tr>
+<tr><td data-label="#">A5</td><td data-label="Assumption">Best case for any fallback is Eberhard’s <span data-r="eberhard_floor"></span> efficiency floor (<span data-r="dmax_floor"></span> maximum separation)</td><td data-label="Why it is reasonable">Eberhard showed such tests can work down to <span data-r="eberhard_floor"></span> with specially tuned (non-maximally entangled) states and near-perfect hardware; we treat it as the floor</td><td data-label="Favours">Startup (it is unreachable in practice)</td></tr>
+<tr><td data-label="#">A6</td><td data-label="Assumption">Fibre loss <span data-r="fibre_loss"></span>; source at the midpoint so each photon travels half the distance</td><td data-label="Why it is reasonable">Standard telecom fibre; midpoint placement minimises the worst arm</td><td data-label="Favours">Startup (lowest-loss geometry)</td></tr>
+<tr><td data-label="#">A7</td><td data-label="Assumption">Perfect detectors by default; sensitivity at efficiencies <span data-r="det_levels"></span></td><td data-label="Why it is reasonable">Real detectors are below perfect; at the middle level the green zone shrinks to <span data-r="dmax_82_det09"></span></td><td data-label="Favours">Startup</td></tr>
+<tr><td data-label="#">A8</td><td data-label="Assumption">Three causal states for one classical bit: physically excluded below d/c (vacuum light), route-dependent up to a straight-line fibre route at <span data-r="fibre_index"></span>, arrives above it; New York–London uses half the Hibernia round-trip benchmark (<span data-r="hibernia_one_way"></span>)</td><td data-label="Why it is reasonable">Separates what physics forbids from what a particular route delivers; the Hibernia figure is a 2015 round-trip claim, not a measured one-way service</td><td data-label="Favours">Startup (straight-line fibre is faster than any real cable, so the route-dependent band is as narrow as it can be)</td></tr>
+<tr><td data-label="#">A9</td><td data-label="Assumption">The <span data-r="race_window"></span> window from Aquilina, Budish &amp; O’Neill is shown only as the fastest documented decision timescale</td><td data-label="Why it is reasonable">It measures equity latency-arbitrage races, a different market from block orders; it does not establish demand for this product</td><td data-label="Favours">Neutral</td></tr>
+<tr><td data-label="#">A10</td><td data-label="Assumption"><span data-r="pair_rate"></span> pairs/s means pairs <em>generated</em> at the source; only the both-arrive share is usable</td><td data-label="Why it is reasonable">Literal reading of a source specification</td><td data-label="Favours">Us (alternative reading: delivered pairs, <span data-r="hours_delivered"></span> instead of <span data-r="hours_generated"></span>; neither changes the decision)</td></tr>
+<tr><td data-label="#">A11</td><td data-label="Assumption">Payoff ±<span data-r="payoff"></span> per round, costs <span data-r="cost_q"></span> and <span data-r="cost_c"></span> per round, as given</td><td data-label="Why it is reasonable">The case defines them; we flag them as invented</td><td data-label="Favours">Startup (no real trade is shown to pay like this)</td></tr>
+<tr><td data-label="#">A12</td><td data-label="Assumption">Heralded delivery (quantum memories) is a founder-rescue scenario only</td><td data-label="Why it is reasonable">Not claimed by the startup; memories at trading-desk scale are not commercial</td><td data-label="Favours">Startup (we model it anyway)</td></tr>
+<tr><td data-label="#">A13</td><td data-label="Assumption">Distances are approximate straight-line figures (Carteret–Secaucus ~<span data-r="carteret_km"></span>, NYSE–Nasdaq ~<span data-r="nasdaq_km"></span>, New York–London ~<span data-r="ny_lon_km"></span>)</td><td data-label="Why it is reasonable">Real fibre routes are longer</td><td data-label="Favours">Startup (longer routes lose more photons)</td></tr>
+<tr><td data-label="#">A14</td><td data-label="Assumption">Fixed random seed <span data-r="seed"></span>; <span data-r="n_mc"></span> Monte Carlo rounds per simulation</td><td data-label="Why it is reasonable">Reproducibility; Monte Carlo agrees with the formulas to within <span data-r="mc_err"></span></td><td data-label="Favours">Neutral</td></tr>
+<tr><td data-label="#">A15</td><td data-label="Assumption">No decision window is stated for New York–London block orders, so we report all three causal states</td><td data-label="Why it is reasonable">If the window exceeds <span data-r="hibernia_one_way"></span> the bit wins; if it is shorter, direct-fibre loss leaves quantum at <span data-r="classical_max"></span></td><td data-label="Favours">Neutral: no edge either way</td></tr>
+<tr><td data-label="#">A16</td><td data-label="Assumption">Fibre loss sensitivity: <span data-r="loss_017"></span> (Ding &amp; Jiang) gives <span data-r="dmax_82_017"></span> at <span data-r="p_claim"></span> and <span data-r="dmax_floor_017"></span> best case; a hypothetical <span data-r="loss_010"></span> fibre gives <span data-r="dmax_82_010"></span> and <span data-r="dmax_floor_010"></span></td><td data-label="Why it is reasonable">Shows how much better glass would buy</td><td data-label="Favours">Neutral (reported, not assumed)</td></tr>
+<tr><td data-label="#">A18</td><td data-label="Assumption">Heralded demand is the claimed volume spread over one trading year (<span data-r="trading_year"></span>): <span data-r="demand_per_s"></span> rounds per second</td><td data-label="Why it is reasonable">Converts the <span data-r="target"></span> claim into a rate the link must supply</td><td data-label="Favours">Startup (perfect, lossless memories assumed)</td></tr>
+<tr><td data-label="#">A17</td><td data-label="Assumption">The <span data-r="p_claim"></span> was measured over the <span data-r="link_km"></span> test link, and a trading desk must act on every round</td><td data-label="Why it is reasonable">The case file presents the link as the startup’s test link; a desk cannot un-trade a round</td><td data-label="Favours">Us (if the <span data-r="p_claim"></span> came from a shorter bench setup, our link result still stands but the <span data-r="p_claim"></span> says less about the link)</td></tr>
+</tbody>
+</table></div>
+    </div>
+  </div>
+</section>
+<section class="section" id="sources" aria-labelledby="sources-title" style="padding:72px 0">
+  <div class="container-wide">
+    <header class="sec-head">
+      <div class="sec-num"><span class="pixel" aria-hidden="true">04</span><span class="label-mono">Sources</span></div>
+      <div class="sec-title">
+        <h2 id="sources-title" style="font-size:2.25rem"><span class="sr-only">04. </span>Published work we relied on.</h2>
+        <p class="lead">Citation details are given as published; they are not results of this study.</p>
+      </div>
+    </header>
+    <div class="sec-body" style="margin-top:48px">
+<div class="prose" style="max-width:none;font-size:0.9375rem"><ul data-literal>
+<li>Ding, Y. &amp; Jiang, L. “Coordinating Decisions via Quantum Telepathy.” arXiv:2407.21723. NYSE–Nasdaq hedging toy model at 56.3 km; finds fibre insufficient; η ≥ 2/3 floor; Theorem 10 on nonuniform inputs; cites US Patent 11676104B2.</li>
+<li>Szegedy, M., Ding, Y. &amp; Shi, Y. US Patent 11676104B2, coordinating decisions between non-communicating parties.</li>
+<li>Mermin, N. D. (1986); Eberhard, P. H., Phys. Rev. A 47, R747 (1993). Detection-efficiency thresholds of 82.8% and 66.7%.</li>
+<li>Yin, J. et al., Science 356, 1140 (2017). Micius satellite, 1,203 km, ~1.1 pairs/s.</li>
+<li>Craddock, A. N. et al., PRX Quantum 5, 030330 (2024). ~5×10⁵ pairs/s over 34 km of New York City fibre.</li>
+<li>Neumann, S. P. et al. (2022). Entanglement distribution over 248 km of deployed fibre.</li>
+<li>Hibernia Express (2015). NY4–LD4 round trip under 58.95 ms.</li>
+<li>Aquilina, M., Budish, E. &amp; O’Neill, P., QJE 137(1) (2022). Races ~5–10 µs; ~$5B/yr globally.</li>
+<li>Liu, M. et al., Nature 640, 343 (2025). Certified randomness, 71,313 bits.</li>
+</ul></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="foot">
+  <div class="container-wide foot-grid">
+    <div class="foot-brand">
+      <a href="index.html" class="wordmark" aria-label="Missing Photon: home"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="0.5" y="0.5" width="19" height="19" fill="none" stroke="currentColor" stroke-opacity="0.35"/><path d="M10 0.5v19" stroke="currentColor" stroke-opacity="0.35"/><circle cx="5.25" cy="10" r="2.5" fill="currentColor"/><circle cx="14.75" cy="10" r="2.25" fill="none" stroke="currentColor" stroke-dasharray="1.6 1.4"/></svg><span>Missing Photon</span></a>
+      <p>An open-source investment-diligence study. Should we invest <span data-r="investment"></span> at <span data-r="pre_money"></span> pre-money in entanglement-based coordination for trading desks? No.</p>
+    </div>
+    <nav aria-label="Footer" class="foot-cols">
+      <div>
+        <p class="label-mono">Study</p>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="findings.html">Findings memo</a></li>
+          <li><a href="evidence.html">Evidence register</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="label-mono">Tools</p>
+        <ul>
+          <li><a href="exhibit.html">Interactive exhibit</a></li>
+          <li><a href="reproduce.html">Reproduce</a></li>
+          <li><a href="data/results.json">results.json</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="label-mono">Source</p>
+        <ul>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly">GitHub <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly/blob/main/case_file.md">Case file <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+          <li><a href="https://github.com/udsy19/The-28-Millisecond-Monopoly/blob/main/review/review.md">Independent review <span class="ext" aria-hidden="true">&#8599;</span></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="foot-bar">
+    <div class="container-wide">
+      <span>Research study &middot; not investment advice</span>
+      <span class="tnum">seed <span data-r="seed"></span> &middot; <span data-r="n_mc"></span> Monte Carlo rounds</span>
+    </div>
+  </div>
+</footer>
+<script src="common.js"></script>
+</body>
+</html>

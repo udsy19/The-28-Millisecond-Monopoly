@@ -117,7 +117,7 @@
       " of its photons; both photons arrive in " + pct(r.both, 1) + " of rounds.</title>");
     // header line
     o.push('<text x="' + cx + '" y="12" text-anchor="middle" class="dg-text" font-size="' + fsS + '" fill="var(--subtle)" letter-spacing="0.6">' +
-      esc((km(r.s.d) + " apart · window " + dur(r.s.w)).toUpperCase()) + "</text>");
+      esc(km(r.s.d) + " apart · window " + dur(r.s.w)) + "</text>");
     // source
     o.push('<rect x="' + (cx - 62) + '" y="30" width="124" height="40" fill="var(--background)" stroke="var(--border-strong)"/>');
     o.push('<text x="' + cx + '" y="47" text-anchor="middle" class="dg-text" font-size="' + fs + '" fill="var(--foreground)">pair source</text>');

@@ -497,8 +497,9 @@ figure { margin: 0; }
 .cols { display: grid; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .col { display: grid; align-content: start; gap: 16px; padding: 28px 0; min-width: 0; }
 .col + .col { border-top: 1px solid var(--border); }
-.col .big { font-family: var(--font-mono); font-size: 2.5rem; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums slashed-zero; }
-.col .big-em { color: var(--accent); }
+.col .big { color: var(--foreground); font-family: var(--font-mono); font-size: 2.5rem; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums slashed-zero; }
+.col .big.big-em { color: var(--accent); }
+.col .big.t-danger { color: var(--danger); }
 .col p { color: var(--muted); }
 .col .col-src { font-size: 0.75rem; color: var(--subtle); border-top: 1px solid var(--hairline); padding-top: 12px; }
 @media (min-width: 900px) {
@@ -591,7 +592,7 @@ ol.list li::before { content: counter(q, decimal-leading-zero); width: auto; hei
 .doc-links .is-missing { color: var(--subtle); }
 
 /* docs layout: on-this-page rail + content */
-.docs { display: grid; gap: 40px; padding: 56px 0 128px; }
+.docs { display: grid; gap: 40px; padding-top: 56px; padding-bottom: 128px; }
 .docs-nav { font-size: 0.8125rem; }
 .docs-nav ul { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; }
 .docs-nav a { display: block; padding: 6px 0 6px 12px; border-left: 1px solid var(--border); color: var(--muted); }
@@ -692,7 +693,7 @@ input[type="range"]:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ---- footer --------------------------------------------------------------------------- */
 .foot { border-top: 1px solid var(--border); }
-.foot-grid { display: grid; gap: 48px; padding: 64px 0; }
+.foot-grid { display: grid; gap: 48px; padding-block: 64px; }
 .foot-brand { display: grid; align-content: start; gap: 16px; }
 .foot-brand p { font-size: 0.8125rem; color: var(--foreground); max-width: 44ch; }
 .foot-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
@@ -723,3 +724,9 @@ input[type="range"]:disabled { opacity: 0.4; cursor: not-allowed; }
 .ev-wrap::before { margin-top: 3px; }
 @media (max-width: 639px) { .ev { white-space: normal; } }
 .foot-brand .wordmark { justify-self: start; }
+
+/* result strings keep their own case inside uppercase labels (so "µs" never becomes "ΜS") */
+.label-mono [data-r], .legend [data-r], .ev [data-r], .scen-tag [data-r], th [data-r] { text-transform: none; }
+.ro-row .ev { white-space: normal; }
+.inst-scen legend { float: left; width: 100%; }
+.inst-scen .scen-list { clear: both; }

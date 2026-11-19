@@ -112,7 +112,7 @@
     ctx.translate(X(at), Y(at / VF) - 5);
     ctx.rotate(ang);
     ctx.fillStyle = fg; ctx.textAlign = "left"; ctx.textBaseline = "bottom";
-    ctx.fillText(narrow ? "BIT ARRIVES ON FIBRE ROUTE" : "ABOVE: ONE BIT ARRIVES ON A STRAIGHT FIBRE ROUTE (c/1.468)", 0, 0);
+    ctx.fillText(narrow ? "BIT ARRIVES ON FIBRE ROUTE" : "ABOVE: ONE BIT ARRIVES ON A STRAIGHT FIBRE ROUTE (" + M.FIBRE_GROUP_INDEX + " d/c)", 0, 0);
     ctx.restore();
     ctx.save();
     ctx.translate(X(at), Y(at / C) + 5);

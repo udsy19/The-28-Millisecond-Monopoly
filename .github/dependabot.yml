@@ -1,8 +1,15 @@
 version: 2
 updates:
+  # One grouped PR per ecosystem per month, so short-lived update branches stay rare.
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: monthly }
+    groups:
+      actions:
+        patterns: ["*"]
   - package-ecosystem: pip
     directory: /
     schedule: { interval: monthly }
+    groups:
+      python:
+        patterns: ["*"]

@@ -92,7 +92,10 @@ R["stake"] = CASE["investment"] / R["post_money"]
 D.update(pre_money="$25M", investment="$3M", post_money="$28M", stake=pct(R["stake"]),
          p_claim="82%", p_demo="74%", n_trials="1,000", payoff="$100",
          target="$50M", link_km="40 km", pair_rate="1,000", global_pool="$5B",
-         cost_q="$0.08", cost_c="$0.001")
+         cost_q="$0.08", cost_c="$0.001", seed=f"{SEED}", n_mc=f"{N_MC:,}",
+         ny_lon_km="5,570 km", carteret_km="32 km", nasdaq_km="56 km", fibre_loss="0.2 dB/km",
+         det_levels="1.0, 0.9, 0.8", race_window="5–10 µs", eberhard_floor="2/3",
+         herald_rtt="58.95 ms")
 CASE
 ''')
 
@@ -127,7 +130,7 @@ R["tsirelson"] = chsh.IDEAL_QUANTUM_WIN
 R["z_82_vs_ideal"] = (0.82 - R["tsirelson"]) / math.sqrt(R["tsirelson"] * (1 - R["tsirelson"]) / n)
 
 D.update(classical_max="75%", one_bit="100%", z_82=f"{R['z_82']:+.1f}", z_74=f"{R['z_74']:+.1f}",
-         ideal_q=pct(R["tsirelson"]), ci_74=f"{pct(R['ci_74'][0])}–{pct(R['ci_74'][1])}")
+         ideal_q=pct(R["tsirelson"]), ci_level="95%", ci_74=f"{pct(R['ci_74'][0])}–{pct(R['ci_74'][1])}")
 for k in ("classical_max", "n_strategies_at_max", "one_bit_win", "z_82", "z_74", "ci_74",
           "quantum_exact", "quantum_mc", "z_82_vs_ideal"):
     print(f"{k:22s} {R[k]}")
@@ -181,6 +184,7 @@ e2["attempted_rounds_if_postselected"] = CASE["n_trials"] / e2["p82"]["both_shar
 # What the 82% source would score on ALL rounds over 40 km, and how far below 75% that is
 e2["z_all_rounds_82"] = chsh.z_score(e2["p82"]["win_40"], n=CASE["n_trials"])
 R["e2"] = e2
+D["mc_err"] = f"{100 * max(e2[k]['mc_abs_error'] for k in P_LEVELS):.2f} percentage points"
 
 D.update(eta_40=f"{e2['ideal']['eta_40']:.3f}", eta_40_pct=pct(e2["ideal"]["eta_40"], 0),
          win40_ideal=pct(e2["ideal"]["win_40"]), win40_82=pct(e2["p82"]["win_40"]),

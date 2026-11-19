@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Photon That Didn't Show Up</title>
+<meta name="description" content="Interactive exhibit: when can an entangled-photon CHSH strategy beat the best classical strategy for two trading desks?">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="intro">
+    <p class="kicker">Interactive exhibit &middot; The 28-Millisecond Monopoly</p>
+    <h1>The Photon That Didn't Show Up</h1>
+    <p class="lede">Two trading desks play the CHSH game: each sees one secret bit and must answer without talking to the other. The best classical plan wins <strong>75%</strong> of rounds. Shared entangled photons can win up to <strong>85.4%</strong>, but only if both photons actually arrive. Move the sliders to see where that edge survives fibre loss and the speed of light.</p>
+  </header>
+
+  <section class="presets" aria-label="Presets">
+    <span class="presets-label">Presets</span>
+    <button type="button" data-preset="startup">Startup 40 km link</button>
+    <button type="button" data-preset="nasdaq">NYSE&ndash;Nasdaq 56 km</button>
+    <button type="button" data-preset="london">NY&ndash;London 5,570 km</button>
+  </section>
+
+  <div class="grid">
+    <section class="panel controls" aria-label="Controls">
+      <h2>Settings</h2>
+
+      <div class="ctl">
+        <label for="dist"><span>Desk separation</span> <output id="dist-out"></output></label>
+        <input id="dist" type="range" min="0" max="100000" step="1">
+        <p class="gloss">How far apart the two desks are. The photon source sits halfway, so each photon travels half this distance through fibre.</p>
+      </div>
+
+      <div class="ctl">
+        <label for="det"><span>Detector efficiency</span> <output id="det-out"></output></label>
+        <input id="det" type="range" min="0.5" max="1" step="0.005">
+        <p class="gloss">Share of arriving photons the desk's detector actually registers. 100% is a perfect detector (generous to the startup).</p>
+      </div>
+
+      <div class="ctl">
+        <label for="pq"><span>Quantum quality p<sub>q</sub></span> <output id="pq-out"></output></label>
+        <input id="pq" type="range" min="0.75" max="0.854" step="0.001">
+        <p class="gloss">Win rate when both photons do arrive. The startup reports 82%; the physical ceiling is cos&sup2;(&pi;/8) &asymp; 85.36%.</p>
+      </div>
+
+      <fieldset class="ctl mode">
+        <legend>Photon delivery</legend>
+        <label class="radio"><input type="radio" name="mode" value="plain" checked> Non-heralded (startup's setup)</label>
+        <label class="radio"><input type="radio" name="mode" value="herald"> Heralded with quantum memories (founder-rescue, not claimed by startup)</label>
+        <p class="gloss">Non-heralded: a desk whose photon is lost doesn't know whether the other desk got one, so many rounds become coin flips. Heralded: a signal says in advance whether a good pair is stored, so lost pairs fall back to the 75% classical rule at no cost.</p>
+      </fieldset>
+
+      <div class="ctl" id="herald-ctl">
+        <label for="hf"><span>Heralded fraction h</span> <output id="hf-out"></output></label>
+        <input id="hf" type="range" min="0" max="1" step="0.001">
+        <p class="gloss">Share of rounds that start with a confirmed, stored pair. <button type="button" class="link" id="hf-eta2">Set to &eta;&sup2;</button> (both photons survive this link).</p>
+      </div>
+
+      <div class="ctl">
+        <label for="win"><span>Decision window</span> <output id="win-out"></output></label>
+        <input id="win" type="range" min="0" max="100000" step="1">
+        <p class="gloss">How long the desks have to answer. If it is longer than light takes to cross between desks, one ordinary message settles the game.</p>
+      </div>
+    </section>
+
+    <section class="panel readouts" aria-label="Results" aria-live="polite">
+      <h2>What happens</h2>
+      <p class="verdict" id="verdict"></p>
+
+      <dl class="stats">
+        <div class="stat">
+          <dt>Per-desk photon efficiency &eta;</dt>
+          <dd id="r-eta"></dd>
+          <p class="sub" id="r-eta-sub"></p>
+        </div>
+        <div class="stat">
+          <dt id="r-win-label">Win rate over all rounds</dt>
+          <dd id="r-win"></dd>
+          <div class="bar" aria-hidden="true"><span class="bar-fill" id="r-win-bar"></span><span class="bar-mark" id="r-win-mark"></span></div>
+          <p class="sub">vs 75% for the best classical plan (marker)</p>
+        </div>
+        <div class="stat">
+          <dt>Edge per round</dt>
+          <dd id="r-edge"></dd>
+          <p class="sub">Uses the case's invented &plusmn;$100 payoff per round, minus $0.079 extra running cost.</p>
+        </div>
+        <div class="stat">
+          <dt>Max separation that still beats 75%</dt>
+          <dd id="r-dmax"></dd>
+          <p class="sub" id="r-dmax-sub"></p>
+        </div>
+        <div class="stat wide">
+          <dt>Frontier region at this window</dt>
+          <dd><span class="chip" id="r-region"></span></dd>
+          <p class="sub" id="r-region-sub"></p>
+        </div>
+      </dl>
+    </section>
+  </div>
+
+  <section class="panel map-panel" aria-label="Frontier map">
+    <h2>Frontier map</h2>
+    <p class="gloss">Every combination of desk separation (across) and decision window (up). The ring marks your current settings; the colours follow the non-heralded model with your p<sub>q</sub> and detector efficiency.</p>
+    <div class="map-box"><canvas id="map" role="img" aria-label="Frontier map of separation versus decision window, coloured by which strategy wins"></canvas></div>
+    <ul class="legend">
+      <li><span class="sw" style="background:#d6d5cf"></span><span>Grey: one classical bit arrives in time, classical wins 100%</span></li>
+      <li><span class="sw" style="background:#efa596"></span><span>Red: too many photons lost, quantum below 75%</span></li>
+      <li><span class="sw" style="background:#f6d27a"></span><span>Yellow: only an ideal source near the 2/3 efficiency floor could win</span></li>
+      <li><span class="sw" style="background:#8ccf8c"></span><span>Green: quantum beats 75% at your p<sub>q</sub></span></li>
+    </ul>
+  </section>
+
+  <section class="panel bias" aria-label="Unbalanced signals">
+    <h2>Unbalanced signals</h2>
+    <p class="gloss">The textbook game flips each desk's bit 50/50. Real signals rarely are. With perfect photons, how much room is left for quantum?</p>
+    <div class="ctl">
+      <label for="pb"><span>Chance each signal is 1</span> <output id="pb-out"></output></label>
+      <input id="pb" type="range" min="0.05" max="0.95" step="0.01" value="0.5">
+    </div>
+    <p class="bias-read" id="bias-read"></p>
+  </section>
+
+  <footer class="foot">
+    <p>Model: entangled source at the midpoint, 0.2 dB/km fibre, light at its vacuum speed (299,792.458 km/s), Eberhard floor &eta; = 2/3. A desk without a photon answers 0. All numbers are computed in your browser by <code>model.js</code>, a line-for-line port of <code>src/chsh.py</code> checked against it to 1e-12 by <code>tests/test_parity.py</code>.</p>
+  </footer>
+</main>
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+@page { size: Letter; margin: 0.55in 0.65in; }
+body { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 10pt; line-height: 1.3; color: #0b0b0b; background: #fff; max-width: none; margin: 0; }
+h1 { font-size: 17pt; margin: 0 0 4pt; }
+h2 { font-size: 11.5pt; margin: 9pt 0 3pt; border-bottom: 1px solid #d6d5cf; padding-bottom: 1pt; }
+p, li { margin: 3pt 0; }
+ul, ol { margin: 2pt 0; padding-left: 18pt; }
+img { width: 100%; max-width: 4.5in; display: block; margin: 4pt auto 2pt; }
+table { border-collapse: collapse; width: 100%; font-size: 9pt; }
+th, td { border: 1px solid #d6d5cf; padding: 2pt 4pt; vertical-align: top; text-align: left; }
+em { color: #333; }
+header#title-block-header { display: none; }

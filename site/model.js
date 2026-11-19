@@ -13,7 +13,7 @@
   "use strict";
 
   var SPEED_OF_LIGHT_KM_S = 299792.458;   // vacuum: the earliest any signal can arrive
-  var FIBRE_GROUP_INDEX = 1.468;           // standard single-mode fibre at 1550 nm
+  var FIBRE_GROUP_INDEX = 1.47;            // standard single-mode fibre at 1550 nm
   var FIBRE_SPEED_KM_S = SPEED_OF_LIGHT_KM_S / FIBRE_GROUP_INDEX;   // ~204,000 km/s
   var FIBRE_LOSS_DB_PER_KM = 0.2;          // telecom fibre at 1550 nm
   var EBERHARD_FLOOR = 2.0 / 3.0;          // lowest efficiency any CHSH-type test tolerates
@@ -87,19 +87,22 @@
     return biased_classical(p);
   }
 
-  /* E4: one-way latency of the modelled classical route (default: straight-line fibre at c/1.468).
-     A quoted route_latency (seconds) replaces it, but nothing is faster than light. */
+  /* E4: one-way latency of the modelled classical route. Default: straight-line fibre,
+     FIBRE_GROUP_INDEX * d / c (written this way so the boundary window = 1.47 d/c is exact).
+     A quoted route_latency (seconds) replaces it, but nothing is faster than light (d/c). */
   function route_latency_s(d_km, route_latency) {
-    var modelled = (route_latency === undefined || route_latency === null) ? d_km / FIBRE_SPEED_KM_S : route_latency;
+    var modelled = (route_latency === undefined || route_latency === null)
+      ? FIBRE_GROUP_INDEX * d_km / SPEED_OF_LIGHT_KM_S : route_latency;
     return Math.max(modelled, d_km / SPEED_OF_LIGHT_KM_S);
   }
 
-  /* E4: can one classical bit reach the other desk within the window? */
+  /* E4: can one classical bit reach the other desk within the window?
+     EXCLUDED: window < d/c.  ROUTE_DEPENDENT: d/c <= window < route latency.
+     ARRIVES: window >= route latency (default 1.47 d/c). */
   function causal_status(d_km, window_s, route_latency) {
-    var status = CAUSAL_ROUTE_DEPENDENT;
-    if (window_s <= d_km / SPEED_OF_LIGHT_KM_S) status = CAUSAL_EXCLUDED;
-    if (window_s > route_latency_s(d_km, route_latency)) status = CAUSAL_ARRIVES;
-    return status;
+    if (window_s < d_km / SPEED_OF_LIGHT_KM_S) return CAUSAL_EXCLUDED;
+    if (window_s >= route_latency_s(d_km, route_latency)) return CAUSAL_ARRIVES;
+    return CAUSAL_ROUTE_DEPENDENT;
   }
 
   /* E4: classify a (separation, decision window) point. Scalar version.

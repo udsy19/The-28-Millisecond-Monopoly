@@ -48,7 +48,7 @@ def check(path):
         line = re.sub(r"\bE\d\b|\bA\d+\b|E2b", "", line)  # experiment / assumption labels
         line = re.sub(r"\b\d{1,2}:\d{2}\b", "", line)  # script timestamps
         for tok in NUM.findall(line):
-            t = tok.replace("−", "-").lstrip("-")
+            t = tok.replace("−", "-").lstrip("-").rstrip(",")
             if t in known or t in ALLOW or t.rstrip(",") in known:
                 continue
             bad.append(f"{path.relative_to(ROOT)}:{lineno}: '{tok}'  in: {line.strip()[:90]}")

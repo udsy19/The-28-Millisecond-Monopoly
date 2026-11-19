@@ -22,3 +22,27 @@ Every judgment call made while building this submission: the decision, the alter
 | D16 | PDF route: pandoc → standalone HTML → headless Chromium print-to-PDF | pandoc + LaTeX | No LaTeX engine is installed (xelatex/pdflatex missing); Chromium is preinstalled. |
 | D17 | Patent wording: we say US 11676104B2 *describes* the same idea and raise freedom to operate as a question | Assert infringement | We have not read the claims in legal detail; it is a diligence question, not a finding. |
 | D18 | No existing PR template found; PR body follows a simple summary / tests layout | — | Nothing to mirror. |
+
+## Fixes from the independent review (`review/review.md`)
+
+The reviewer re-derived 15 numbers from first principles; all matched `results.json`. Issues and what we did:
+
+| Review item | Valid? | Fix |
+|---|---|---|
+| 1 [must] Steelman said the herald competes with the winning classical bit | Yes (physics error: the herald precedes the inputs) | Rewrote: heralding is sound physics; the obstacle is memories at trading volume |
+| 2 [must] Patent wording ("this exact idea", "same idea") overstated | Yes | Now "titled for / covers coordinating non-communicating parties; claims not compared"; freedom to operate glossed and separated from the strength of the startup's own filings |
+| 3 [must] "Every real trading route" rests on three routes | Yes | Figure title, brief, evidence register and steelman now say "every route we checked"; steelman notes we did not survey facilities within a few km |
+| 4 [must] Headline premises unstated (82% measured over the 40 km link; desks act on every round) | Yes | Stated inline in the memo, in Limitations, as assumption A17; founder question 1 now asks over what link the 82% was measured |
+| 5 [should] "$78M loss" is a straw man; $5B is equities latency arbitrage | Yes | Memo and brief now say the product is worth nothing on that link (a desk would switch the photons off); $78M framed as "used as sold"; $5B called a generous comparator |
+| 6 [should] NY–London grey rests on unsourced block-order timing | Yes | Assumption A15 makes it explicit; with a shorter window the route is red and still has no edge |
+| 7 [should] Memo first sentence was provenance; experiment cited loosely | Yes | Recommendation is now the first sentence; experiment line (notebook, seed, Monte Carlo size) moved to the end. Notebook filename was correct (`analysis.ipynb`; executed copy also named) |
+| 8 [should] Figure: "6 km" vs 5.7 km; yellow mislabelled; red "below 75%"; µs axis label; race label crossed | Yes | All fixed; red now "cannot beat 75%", footnote notes long routes fall back to exactly 75% |
+| 9 [should] Lower-loss fibre not considered | Yes | Notebook adds 0.17 dB/km (Ding & Jiang) and hypothetical 0.1 dB/km sensitivity; reported in steelman and assumption A16 |
+| 10 [should] Jargon | Yes | Glossed classical, µs, latency arbitrage, freedom to operate, heralding, experiment codes; removed "green zone" from the brief |
+| 11 [should] Brief sources omit Ding & Jiang; Liu et al. is computational, not photonic | Yes | Added Ding & Jiang; Liu et al. now described as certified randomness on a quantum computer everywhere |
+| 12 [should] Ledger missing valuation and operating-cost rows | Yes | Rows added |
+| 13–14 [nit] wording | Yes | "consistent with 75%"; hypothesis section now "the decision survived, the reason changed" |
+| 15 [nit] Eberhard "proven lower bound"; NYSE–Nasdaq scoring above 40 km unexplained | Yes | A5 reworded to what Eberhard showed; notebook computes the worst distance (~36 km) and the memo caption explains the drift back toward 75% |
+| 16 [nit] Unsourced 80–95% detector figure; landmark distances | Partly | Removed the 80–95% figure; distances remain approximate and are labelled so (A13) |
+| Reviewer suggested 0.15 dB/km row | No (not from a listed source) | Used 0.17 dB/km, which Ding & Jiang use, plus an explicitly hypothetical 0.1 dB/km |
+| Craddock / Yin pair-rate details | Not verifiable offline | Kept as cited in the brief's source list, without extra claims |

@@ -25,7 +25,7 @@ Terms used below:
 
 **Rebuttal (E2, E4).** Fibre loss grows with distance, and better detectors cannot undo it. Even with perfect detectors, an 82% source needs each desk to receive 87.7% of its photons. That only happens within 5.7 km (E2). A perfect source needs 82.8%, which means 8.2 km. Under the best-case 2/3 threshold (Eberhard), the limit is 17.6 km. Every route we checked is further apart: Carteret–Secaucus scores 64.1% and NYSE–Nasdaq 65.6% on every-round accounting (E4). With realistic, slightly imperfect detectors the 82% limit falls to 1.1 km (E2). Improvements move the edge of the green zone on our map. They do not reach the 40 km test link.
 
-**What survives.** Nothing, for fibre between real trading sites.
+**What survives.** Not on the routes we checked (32–56 km). Better fibre helps but slowly: at 0.17 dB/km (the figure Ding & Jiang use) the 82% source reaches 6.7 km and the best case 20.7 km; even a hypothetical 0.1 dB/km fibre only gets the best case to 35.2 km, just past Carteret–Secaucus, with near-perfect tuned states and perfect detectors. We did not survey every pair of facilities within a few kilometres of each other.
 
 ## "Quantum memories and heralding fix photon loss."
 
@@ -33,7 +33,7 @@ Terms used below:
 
 **Rebuttal (E2b, E1, E4).** This is the best rescue argument, and our model agrees it works on paper. With heralding, the win rate never drops below 75%, and with every round heralded it reaches 82.0% (E2b). On the 40 km link that leaves about 158 confirmed pairs a second. But:
 - The startup has not claimed quantum memories. They are not yet commercial at trading-desk scale.
-- The herald is itself a classical signal. It has to arrive before the round. On any route where there is time for that, there is usually time for one classical bit, and one bit wins 100% (E1, E4).
+- Heralding is real physics: the confirmation is sent *before* the inputs exist, so it does not compete with the race. But the desks then need memories that hold a photon until the round arrives, at trading volumes, and nobody sells that today.
 - It does nothing for New York–London, the first product (E4).
 
 **What survives.** Partly. Heralding changes *which* product could work. A future company with memories, on a short metro route, might have something. That is a different company from the one we are being asked to fund at $25M.

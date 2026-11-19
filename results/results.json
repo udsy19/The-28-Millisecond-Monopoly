@@ -97,6 +97,28 @@
         "dmax_floor": 7.918124604762486
       }
     ],
+    "worst_distance_km_82": 35.793484700045376,
+    "worst_win_82": 0.6403508771929824,
+    "fibre_loss_sensitivity": [
+      {
+        "loss_db_per_km": 0.2,
+        "dmax_82": 5.690485133647257,
+        "dmax_ideal": 8.174568967388183,
+        "dmax_floor": 17.609125905568128
+      },
+      {
+        "loss_db_per_km": 0.17,
+        "dmax_82": 6.694688392526183,
+        "dmax_ideal": 9.617139961633157,
+        "dmax_floor": 20.71661871243309
+      },
+      {
+        "loss_db_per_km": 0.1,
+        "dmax_82": 11.380970267294513,
+        "dmax_ideal": 16.349137934776365,
+        "dmax_floor": 35.218251811136255
+      }
+    ],
     "e2b": {
       "table": [
         {
@@ -246,6 +268,13 @@
     "light_us_82": "19 µs",
     "light_us_floor": "59 µs",
     "dmax_82_det09": "1.1 km",
+    "worst_km": "36 km",
+    "dmax_82_017": "6.7 km",
+    "dmax_floor_017": "20.7 km",
+    "dmax_82_010": "11.4 km",
+    "dmax_floor_010": "35.2 km",
+    "loss_017": "0.17 dB/km",
+    "loss_010": "0.1 dB/km",
     "herald_rate": "158",
     "heralded_win_full": "82.0%",
     "cheat_all": "75%",

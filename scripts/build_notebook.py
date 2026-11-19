@@ -200,7 +200,7 @@ json.dumps(e2, indent=1)[:1500]
 
 md("""
 **Detector-efficiency sensitivity.** The table above assumes perfect detectors, which is generous
-to the startup. Real single-photon detectors are 80–95% efficient; any loss there multiplies
+to the startup. Real single-photon detectors are below 100% efficient; any loss there multiplies
 the fibre loss.
 """)
 
@@ -217,6 +217,31 @@ for det in (1.0, 0.9, 0.8):
     sens.append(row)
 R["detector_sensitivity"] = sens
 D["dmax_82_det09"] = f"{sens[1]['dmax_82']:.1f} km"
+
+# Where is the all-rounds win rate lowest? d(win)/d(eta) = 0 at eta = 0.25 / (p_q - 0.25).
+# Beyond that distance both photons are usually lost, both desks play the classical rule,
+# and the win rate drifts back UP toward (never above) 75%. This is why a longer route
+# can score slightly higher than the 40 km link.
+eta_worst = 0.25 / (0.82 - 0.25)
+R["worst_distance_km_82"] = chsh.max_separation_km(eta_worst)
+R["worst_win_82"] = chsh.all_rounds_win(eta_worst, 0.82)
+D["worst_km"] = f"{R['worst_distance_km_82']:.0f} km"
+
+# Fibre-loss sensitivity: 0.17 dB/km is the figure Ding & Jiang use; 0.1 dB/km is a
+# hypothetical far-better fibre, included to show how much headroom better glass buys.
+loss_rows = []
+for loss in (0.2, 0.17, 0.1):
+    loss_rows.append(dict(loss_db_per_km=loss,
+        dmax_82=chsh.max_separation_km(chsh.eta_threshold(0.82), loss_db_per_km=loss),
+        dmax_ideal=chsh.max_separation_km(chsh.eta_threshold(chsh.IDEAL_QUANTUM_WIN), loss_db_per_km=loss),
+        dmax_floor=chsh.max_separation_km(chsh.EBERHARD_FLOOR, loss_db_per_km=loss)))
+R["fibre_loss_sensitivity"] = loss_rows
+D.update(dmax_82_017=f"{loss_rows[1]['dmax_82']:.1f} km", dmax_floor_017=f"{loss_rows[1]['dmax_floor']:.1f} km",
+         dmax_82_010=f"{loss_rows[2]['dmax_82']:.1f} km", dmax_floor_010=f"{loss_rows[2]['dmax_floor']:.1f} km",
+         loss_017="0.17 dB/km", loss_010="0.1 dB/km")
+print("worst distance (82%):", R["worst_distance_km_82"], "km, win", R["worst_win_82"])
+for r in loss_rows:
+    print(r)
 print(f"{'det':>4} {'eta40':>7} {'win40 ideal':>12} {'win40 82%':>10} {'dmax ideal':>11} {'dmax 82%':>9} {'dmax 2/3':>9}")
 for r in sens:
     print(f"{r['det']:4.1f} {r['eta_40']:7.3f} {r['win40_ideal']:12.3f} {r['win40_82']:10.3f} "
@@ -352,8 +377,8 @@ ax.text(250, 250 / c * 1e6 * 1.45, "one-bit line: light-travel time between desk
 
 # typical latency-arbitrage race (Aquilina, Budish & O'Neill 2022)
 ax.axhspan(5, 10, color=BLUE, alpha=0.22, lw=0)
-ax.text(1.12, 7.1, "typical latency-arbitrage race (5–10 µs)", fontsize=9, color="#104281",
-        va="center", fontweight="bold")
+ax.text(90, 7.1, "typical latency-arbitrage race (5–10 µs)", fontsize=9, color="#104281",
+        va="center", ha="left", fontweight="bold")
 
 # landmark lines with labels inside the plot, in the grey area, staggered left/right
 label_side = {"Carteret–Secaucus": ("right", 0.95), "Startup 40 km test link": ("left", 1.05),
@@ -367,34 +392,35 @@ for name, km in LANDMARKS:
 # direct region labels (the legend repeats them with numbers)
 ax.text(1.12, 4e3, "GREY: one classical bit\narrives in time,\nclassical wins 100%",
         fontsize=9.5, ha="left", va="center", color=INK)
-ax.text(400, 22, "RED: no time for a bit, and too many\nphotons lost to beat 75%",
+ax.text(400, 22, "RED: no time for a bit, and too many\nphotons lost for quantum to beat 75%",
         fontsize=10, ha="center", color="#7a1f17")
 dmax82, dfloor = e2["p82"]["d_max_km"], e2["floor_d_max_km"]
 ax.text(2.35, 1.75, "GREEN\nquantum wins\nat 82%", fontsize=8, ha="center", va="center", color="#0b4f0b")
-ax.text(10.0, 1.75, "YELLOW\nideal source\nonly", fontsize=8, ha="center", va="center", color="#6b4e00")
+ax.text(10.0, 1.75, "YELLOW\nnear-perfect\ntuned source", fontsize=8, ha="center", va="center", color="#6b4e00")
 
 
 ax.set_xlabel("Distance between the two desks (km, log scale)")
-ax.set_ylabel("Time allowed to make the decision (µs, log scale)")
+ax.set_ylabel("Time allowed to make the decision (log scale)")
 ax.set_yticks([1, 10, 100, 1e3, 1e4, 1e5])
 ax.set_yticklabels(["1 µs", "10 µs", "100 µs", "1 ms", "10 ms", "100 ms"])
 ax.set_xticks([1, 10, 100, 1e3, 1e4]); ax.set_xticklabels(["1", "10", "100", "1,000", "10,000"])
 ax.spines["top"].set_visible(True); ax.spines["right"].set_visible(True)
 
 legend = [Patch(color=colors[0], label="Grey: classical bit arrives, classical wins 100%"),
-          Patch(color=colors[1], label="Red: photon loss too high, quantum below 75%"),
-          Patch(color=colors[2], label=f"Yellow: ideal source near 2/3 floor only (< {dfloor:.1f} km)"),
+          Patch(color=colors[1], label="Red: photon loss too high, quantum cannot beat 75%"),
+          Patch(color=colors[2], label=f"Yellow: only a near-perfect tuned source (2/3 floor, < {dfloor:.1f} km)"),
           Patch(color=colors[3], label=f"Green: wins at startup's 82% (< {dmax82:.1f} km, < {dmax82 / c * 1e6:.0f} µs)"),
           Patch(color=BLUE, alpha=0.22, label="Typical latency-arbitrage race")]
 ax.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, -0.10), ncol=2,
           frameon=False, fontsize=8.5)
-fig.suptitle("Photon loss or one classical bit beats entanglement on every real trading route\n"
-             f"Quantum only pays within {dmax82:.0f} km and under {dmax82 / c * 1e6:.0f} µs — the startup's own 40 km link is red",
+fig.suptitle("Photon loss or one classical bit beats entanglement on every trading route we checked\n"
+             f"Quantum only pays within {dmax82:.1f} km and under {dmax82 / c * 1e6:.0f} µs — the startup's own 40 km link is red",
              x=0.08, y=0.985, ha="left", fontsize=12.5, fontweight="bold")
 fig.text(0.08, -0.115,
          "Distances are approximate straight-line figures. Model: entangled source at the midpoint, 0.2 dB/km fibre, perfect detectors "
-         "(generous to the startup),\none classical bit travelling at the vacuum speed of light. "
-         "Green/red boundary uses the startup's 82% source quality; yellow uses Eberhard's 2/3 floor (best case).",
+         "(generous to the startup), one classical bit at the vacuum speed of light.\n"
+         "Green uses the startup's 82% source quality; yellow uses Eberhard's 2/3 efficiency floor (best case, needs specially tuned states). "
+         "Red includes long routes where quantum falls back to exactly 75%.",
          fontsize=8, color=INK2, ha="left")
 save(fig, "main_frontier.png")
 plt.show()

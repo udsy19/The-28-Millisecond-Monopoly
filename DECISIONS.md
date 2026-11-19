@@ -84,3 +84,13 @@ The reviewer re-derived 15 numbers from first principles; all matched `results.j
 | Brief, photon-loss bullet | Under our unheralded fibre model the 82% headline and the 40 km link cannot both hold for a trading desk: an 82% rate on both-photon rounds fits the link, an all-rounds 82% does not, and the startup's denominator is unverified; … | Under our unheralded fibre model, an 82% coincidence-level source would win about 64.1% of all attempted rounds on a 40 km link. The company's denominator and protocol remain unverified. … |
 | Brief, usable-zone bullet | The modelled 82% strategy only beats 75% below about 5.7 km and, where no bit can arrive, 19 µs (millionths of a second), under idealized assumptions. Every trading route we checked is red or grey … | The modelled 82% unheralded strategy exceeds the classical baseline only below ~5.7 km, under idealized assumptions (8.2 km ideal; ~17.6 km with optimized partially entangled states). Where no bit can arrive, it is also capped at 19 µs (millionths of a second). Every route we checked is red or grey … |
 | Brief, recommendation | **Recommendation: do not invest at this valuation.** | Unchanged |
+
+## Model changes from the external audit
+
+| # | Decision | Why |
+|---|---|---|
+| D32 | Causality has three states: physically excluded (window < d/c), route-dependent (d/c ≤ window < route latency), classical arrives (window ≥ route latency); default route is straight-line fibre at c/1.47; New York–London uses half the 2015 Hibernia round-trip benchmark (29.5 ms) | The old grey test used d/c, the earliest possible arrival, not the arrival on any real route |
+| D33 | Fibre group index changed from 1.468 to 1.47 to match the shared spec; boundaries inclusive at d/c and at route latency | No landmark classification changed (checked before/after) |
+| D34 | Heralded fraction capped by link supply (`heralded_supply_fraction`); demand = claimed volume over 252 trading days × 6.5 h | Stops the heralded scenario implying unlimited range; direct transatlantic fibre supplies ~1e-108 |
+| D35 | Source-at-one-desk sensitivity (E4b): 7.5 km ideal, 5.4 km at 82%, 15.1 km partially entangled, all below the midpoint figures | The midpoint assumption favours the startup |
+| D36 | Agent worktree branches merged into the PR branch; PR left unmerged as instructed; the owner's older `build/*` branches left in place pending a decision | Merge to `main` and branch cleanup were deferred |

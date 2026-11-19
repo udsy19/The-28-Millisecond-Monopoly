@@ -12,3 +12,4 @@
   evidence register, steelman and rebuttal, one-page brief, 3-minute oral script; number-traceability checker.
 - Independent reviewer report (`review/review.md`) and all fixes logged in `DECISIONS.md`.
 - Interactive static website with Python–browser parity tests; CI and GitHub Pages deployment from `main`.
+- Audit fixes: three causal states (c/1.47 route), heralded supply cap, source-at-one-desk sensitivity (E4b), qualified headline wording, binding number check, CI packaging with page and manifest gates.

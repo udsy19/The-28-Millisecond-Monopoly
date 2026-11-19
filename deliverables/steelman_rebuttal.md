@@ -42,7 +42,7 @@ Terms used below:
 
 **Steelman.** Most exchange data centres sit tens of kilometres apart. Latency races last 5–10 µs (Aquilina, Budish & O'Neill, 2022). In that window no classical bit can cross. That is where quantum wins.
 
-**Rebuttal (E4, E2).** The window is right. The distances are wrong. On our main figure (`figures/main_frontier.png`) the race band is mostly red. Quantum only pays within 6 km and under 19 µs (E4). Carteret–Secaucus scores 64.1% and NYSE–Nasdaq 65.6% on every-round accounting. Both are below 75%. Ding & Jiang reach the same verdict for NYSE–Nasdaq at about 56 km: fibre is not enough. The startup's own 40 km link is red too.
+**Rebuttal (E4, E2).** The window is right. The distances are wrong. On our main figure (`figures/main_frontier.png`) the race band is mostly red. Under our unheralded fibre model the 82% strategy beats 75% only below about 5.7 km and, where no bit can arrive, 19 µs (E4). Carteret–Secaucus scores 64.1% and NYSE–Nasdaq 65.6% on every-round accounting. Both are below 75%. Ding & Jiang reach the same verdict for NYSE–Nasdaq at about 56 km: fibre is not enough. The startup's own 40 km link is red too.
 
 **What survives.** A green zone exists, but it is a few kilometres wide. We know of no pair of competing trading sites inside it. Naming two such venues whose desks must coordinate without communicating is a question for the founders.
 

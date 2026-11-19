@@ -12,8 +12,8 @@
 
 ## Why
 
-- **Photon loss is the lead finding.** On 40 km only 40% of photons reach each desk and both arrive in only 16% of rounds, yet a desk must still answer. The 82% headline and the 40 km link cannot both hold for a trading desk. The 82% was most likely counted only on rounds where both photons were detected; a classical setup that drops rounds also scores exactly 82% (E2, E3).
-- **The usable zone is tiny.** Quantum only beats 75% within 5.7 km and with decisions under 19 µs (millionths of a second). Every trading route we checked is red or grey on our main figure (`figures/main_frontier.png`) (E4).
+- **Photon loss is the lead finding.** On 40 km only 40% of photons reach each desk and both arrive in only 16% of rounds, yet a desk must still answer. Under our unheralded fibre model the 82% headline and the 40 km link cannot both hold for a trading desk: an 82% rate on both-photon rounds fits the link, an all-rounds 82% does not, and the startup's denominator is unverified; a classical setup that drops rounds also scores exactly 82% (E2, E3).
+- **The usable zone is tiny.** The modelled 82% strategy only beats 75% below about 5.7 km and, where no bit can arrive, 19 µs (millionths of a second), under idealized assumptions. Every trading route we checked is red or grey on our main figure (`figures/main_frontier.png`) (E4).
 - **Signals must be balanced.** The edge vanishes unless each signal fires between 29% and 71% of the time. No trade has been named (E5).
 - **IP risk.** An earlier patent (Szegedy, Ding & Shi) covers coordinating parties that cannot communicate. Whether the startup can sell without a licence ("freedom to operate") is unproven.
 

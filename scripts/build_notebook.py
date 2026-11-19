@@ -279,12 +279,15 @@ plt.show()
 ''')
 
 md("""
-**Reading E2.** On the 40 km link only about one round in six has both photons arrive. Counting
-every round, the quantum strategy wins well under 75% — worse than the free classical rule.
-To beat 75% the desks must sit within a few kilometres of the source-centred link. The Monte
+**Reading E2.** *Under this unheralded fibre model* (midpoint source, independent loss, fixed
+fallback answer, perfect detectors), only about one round in six on the 40 km link has both photons
+arrive, and counting every round the modelled strategy wins well under 75%. For the modelled 82%
+strategy to beat 75%, the desks must sit within a few kilometres; other strategies have other
+limits (ideal source, Eberhard's tuned states, heralding: see below). The Monte
 Carlo (which really drops photons) agrees with the formula to the third decimal, and its
-coincidence-only win rate reproduces the "lab" number — which is how an 82% can be reported
-from a link that loses on every-round accounting.
+coincidence-only win rate reproduces the "lab" number: an 82% *coincidence* rate is consistent with
+this link, an 82% *all-rounds* rate is not. The startup's actual denominator and protocol are
+unverified, which is why it is founder question 1.
 """)
 
 md("""
@@ -298,25 +301,42 @@ nothing: a round without a heralded pair simply uses the 75% classical rule.
 
 code(r'''
 H_LEVELS = [0.05, 0.158, 0.5, 1.0]
+# How much heralded supply does the link actually provide? Demand = the rounds needed for the
+# claimed $50M, spread over one trading year (252 days x 6.5 h; our assumption, A18).
+TRADING_SECONDS = 252 * 6.5 * 3600
+rounds_needed = chsh.rounds_for_target(CASE["target_annual"], chsh.edge_per_round(0.82))
+demand_per_s = rounds_needed / TRADING_SECONDS
+supply_rows = [dict(route=name, km=km,
+                    heralded_pairs_per_s=CASE["pair_rate"] * chsh.fibre_eta(km) ** 2,
+                    h_max=chsh.heralded_supply_fraction(km, demand_per_s, CASE["pair_rate"]))
+               for name, km in [("Startup 40 km link", 40.0), ("NYSE–Nasdaq", 56.0),
+                                ("New York–London (direct fibre)", CASE["ny_london_km"])]]
 heralded = [dict(h=h, win_82=chsh.heralded_win(h, 0.82), win_ideal=chsh.heralded_win(h, chsh.IDEAL_QUANTUM_WIN),
                  edge_82=chsh.edge_per_round(chsh.heralded_win(h, 0.82))) for h in H_LEVELS]
 # Rate budget on the 40 km link: heralded pairs/s = generated pairs/s x both-arrive probability
 herald_rate_40 = CASE["pair_rate"] * e2["p82"]["both_share_40"]
 R["e2b"] = dict(table=heralded, heralded_pairs_per_s_40km=herald_rate_40,
+                demand_rounds_per_s=demand_per_s, supply=supply_rows,
                 memories_claimed=False)
-D.update(herald_rate=f"{herald_rate_40:.0f}",
+D.update(demand_per_s=f"{demand_per_s:.2f}", trading_year="252 days × 6.5 hours", fibre_index="c/1.468",
+         h_max_ny_lon=f"{supply_rows[2]['h_max']:.0e}",
+         herald_rate=f"{herald_rate_40:.0f}",
          heralded_win_full=pct(chsh.heralded_win(1.0, 0.82)))
 for r in heralded:
     print(f"h={r['h']:.3f}  win(82%)={r['win_82']:.4f}  win(ideal)={r['win_ideal']:.4f}  edge(82%)=${r['edge_82']:.2f}")
 print("heralded pairs/s on 40 km:", herald_rate_40)
+print(f"demand: {demand_per_s:.3f} rounds/s")
+for r in supply_rows:
+    print(f"{r['route']:32s} supply {r['heralded_pairs_per_s']:.3g} pairs/s -> h_max {r['h_max']:.3g}")
 ''')
 
 md("""
 **Reading E2b.** With heralding, any fraction of good rounds helps, so photon loss stops being
-fatal — the win rate never drops below 75%. But this needs quantum memories at both desks (not
-claimed, and not yet commercial at trading-desk scale) and it does nothing for New York–London,
-where the classical bit already wins every round. It changes *which* product could work, not
-whether this one does.
+fatal: the win rate never drops below 75%. But the heralded fraction is capped by what the link
+supplies. Even with perfect, lossless memories, the 40 km link covers the claimed volume, while direct
+fibre across the Atlantic supplies essentially nothing (h ≈ 1e-108), so a transatlantic heralded
+service would need repeaters or satellites that the startup has not claimed. Heralding changes
+*which* product could work; it does not validate this one.
 """)
 
 md("""
@@ -347,9 +367,11 @@ md("""
 ## E4 — Frontier map (MAIN FIGURE)
 
 Where on the map of *distance between desks* × *time allowed to decide* could entanglement ever
-pay? If the decision window is longer than the light-travel time between desks, a single
-classical bit settles the game (grey). Below that line, quantum still needs enough photons to
-survive the fibre: the coloured bands show whether it can beat 75% at all.
+pay? We separate three causal states for one classical bit: **physically excluded** (the window
+is shorter than light needs, d/c), **route-dependent** (physics allows it, but the modelled
+straight-line fibre route at c/1.468 is too slow; a faster route might not be, hatched), and
+**arrives on the modelled route** (grey: one bit wins every round). Where no bit arrives on the
+modelled route, the coloured bands show whether the modelled *unheralded* strategies can beat 75%.
 """)
 
 code(r'''
@@ -360,20 +382,33 @@ c = chsh.SPEED_OF_LIGHT_KM_S
 d = np.logspace(0, 4, 900)            # 1 km .. 10,000 km
 w = np.logspace(-6, -1, 700)          # 1 us .. 100 ms
 DD, WW = np.meshgrid(d, w)
-region = chsh.frontier_region(DD, WW, p_demo=0.82)
+region = chsh.frontier_region(DD, WW, p_demo=0.82)        # grey = bit arrives on modelled fibre route
+causal = chsh.causal_status(DD, WW)
+HIBERNIA_ONE_WAY_S = 58.95e-3 / 2       # derived from the 2015 round-trip benchmark, not a measured one-way service
 
 colors = ["#d6d5cf", "#efa596", "#f6d27a", "#8ccf8c"]     # grey, red, yellow, green
 fig, ax = plt.subplots(figsize=(10, 6.4))
 ax.pcolormesh(d, w * 1e6, region, cmap=ListedColormap(colors), vmin=-0.5, vmax=3.5,
               shading="auto", rasterized=True)
 ax.set_xscale("log"); ax.set_yscale("log")
-ax.plot(d, d / c * 1e6, color=INK, lw=1.2)                       # one-bit boundary
+# route-dependent band: hatched over whatever the loss model says
+matplotlib.rcParams["hatch.color"] = "#5f5e5a"; matplotlib.rcParams["hatch.linewidth"] = 0.6
+ax.contourf(d, w * 1e6, (causal == chsh.CAUSAL_ROUTE_DEPENDENT).astype(float), levels=[0.5, 1.5],
+            colors="none", hatches=["////"])
+ax.plot(d, d / c * 1e6, color=INK, lw=1.2)                                   # physical limit d/c
+ax.plot(d, d / chsh.FIBRE_SPEED_KM_S * 1e6, color=INK, lw=1.0, ls="--")      # modelled fibre route
 ax.set_xlim(1, 1e4); ax.set_ylim(1, 1e5)
 # rotate the boundary label to match the line's on-screen slope
 p1, p2 = ax.transData.transform([(100, 100 / c * 1e6), (1000, 1000 / c * 1e6)])
 angle = math.degrees(math.atan2(p2[1] - p1[1], p2[0] - p1[0]))
-ax.text(250, 250 / c * 1e6 * 1.45, "one-bit line: light-travel time between desks", rotation=angle,
+ax.text(180, 180 / chsh.FIBRE_SPEED_KM_S * 1e6 * 1.35, "bit arrives on straight-line fibre (c/1.468)", rotation=angle,
         rotation_mode="anchor", fontsize=8.5, color=INK, ha="left", va="bottom")
+ax.text(250, 250 / c * 1e6 * 0.62, "physical limit: light-travel time d/c", rotation=angle,
+        rotation_mode="anchor", fontsize=8.5, color=INK, ha="left", va="top")
+# New York-London on the benchmarked Hibernia route (derived one-way figure)
+ax.plot([CASE["ny_london_km"]], [HIBERNIA_ONE_WAY_S * 1e6], "o", ms=6, color=INK, mec="#fcfcfb", mew=1.5, zorder=6)
+ax.text(CASE["ny_london_km"] * 0.93, HIBERNIA_ONE_WAY_S * 1e6 * 1.25, "Hibernia ~29.5 ms\n(½ of 58.95 ms RTT)",
+        fontsize=7.5, ha="right", va="bottom", color=INK)
 
 # typical latency-arbitrage race (Aquilina, Budish & O'Neill 2022)
 ax.axhspan(5, 10, color=BLUE, alpha=0.22, lw=0)
@@ -390,12 +425,12 @@ for name, km in LANDMARKS:
             fontsize=8.5, ha=ha, va="center", color=INK)
 
 # direct region labels (the legend repeats them with numbers)
-ax.text(1.12, 4e3, "GREY: one classical bit\narrives in time,\nclassical wins 100%",
+ax.text(1.12, 4e3, "GREY: one classical bit arrives\non the modelled route,\nclassical wins 100%",
         fontsize=9.5, ha="left", va="center", color=INK)
-ax.text(400, 22, "RED: no time for a bit, and too many\nphotons lost for quantum to beat 75%",
+ax.text(400, 22, "RED: no bit on the modelled route, and too many\nphotons lost for quantum to beat 75%",
         fontsize=10, ha="center", color="#7a1f17")
 dmax82, dfloor = e2["p82"]["d_max_km"], e2["floor_d_max_km"]
-ax.text(2.35, 1.75, "GREEN\nquantum wins\nat 82%", fontsize=8, ha="center", va="center", color="#0b4f0b")
+ax.text(2.35, 1.75, "GREEN\n82% strategy\nbeats 75%", fontsize=8, ha="center", va="center", color="#0b4f0b")
 ax.text(10.0, 1.75, "YELLOW\nnear-perfect\ntuned source", fontsize=8, ha="center", va="center", color="#6b4e00")
 
 
@@ -406,21 +441,22 @@ ax.set_yticklabels(["1 µs", "10 µs", "100 µs", "1 ms", "10 ms", "100 ms"])
 ax.set_xticks([1, 10, 100, 1e3, 1e4]); ax.set_xticklabels(["1", "10", "100", "1,000", "10,000"])
 ax.spines["top"].set_visible(True); ax.spines["right"].set_visible(True)
 
-legend = [Patch(color=colors[0], label="Grey: classical bit arrives, classical wins 100%"),
+legend = [Patch(color=colors[0], label="Grey: bit arrives on modelled fibre route, classical wins 100%"),
+          Patch(facecolor="none", edgecolor="#5f5e5a", hatch="////", label="Hatched: route-dependent (physics allows a bit; modelled route too slow)"),
           Patch(color=colors[1], label="Red: photon loss too high, quantum cannot beat 75%"),
           Patch(color=colors[2], label=f"Yellow: only a near-perfect tuned source (2/3 floor, < {dfloor:.1f} km)"),
-          Patch(color=colors[3], label=f"Green: wins at startup's 82% (< {dmax82:.1f} km, < {dmax82 / c * 1e6:.0f} µs)"),
+          Patch(color=colors[3], label=f"Green: modelled 82% strategy beats 75% (< {dmax82:.1f} km)"),
           Patch(color=BLUE, alpha=0.22, label="Typical latency-arbitrage race")]
 ax.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, -0.10), ncol=2,
           frameon=False, fontsize=8.5)
-fig.suptitle("Photon loss or one classical bit beats entanglement on every trading route we checked\n"
-             f"Quantum only pays within {dmax82:.1f} km and under {dmax82 / c * 1e6:.0f} µs — the startup's own 40 km link is red",
-             x=0.08, y=0.985, ha="left", fontsize=12.5, fontweight="bold")
-fig.text(0.08, -0.115,
-         "Distances are approximate straight-line figures. Model: entangled source at the midpoint, 0.2 dB/km fibre, perfect detectors "
-         "(generous to the startup), one classical bit at the vacuum speed of light.\n"
-         "Green uses the startup's 82% source quality; yellow uses Eberhard's 2/3 efficiency floor (best case, needs specially tuned states). "
-         "Red includes long routes where quantum falls back to exactly 75%.",
+fig.suptitle("On every route we checked, photon loss or one classical bit beats the modelled quantum strategy\n"
+             f"Unheralded fibre model: the 82% strategy beats 75% only below ~{dmax82:.1f} km and ~{dmax82 / c * 1e6:.0f} µs — the startup's 40 km link is red",
+             x=0.08, y=0.985, ha="left", fontsize=12, fontweight="bold")
+fig.text(0.08, -0.145,
+         "Distances are approximate straight-line figures. Loss model: unheralded delivery, entangled source at the midpoint, 0.2 dB/km fibre, perfect "
+         "detectors (generous to the startup),\nfixed fallback answer when a photon is missing. Grey uses a straight-line fibre route at c/1.468; "
+         "hatched = physics allows a bit but that route is too slow. Yellow uses Eberhard's 2/3\nefficiency floor (best case, specially tuned states). "
+         "Red includes long routes that fall back to exactly 75%. Heralded delivery with quantum memories is not shown (see E2b).",
          fontsize=8, color=INK2, ha="left")
 save(fig, "main_frontier.png")
 plt.show()
@@ -431,7 +467,9 @@ for name, km in LANDMARKS:
     landmark_rows.append(dict(name=name, km=km, light_time_us=km / c * 1e6, eta=eta_l,
                               win_all_rounds_82=chsh.all_rounds_win(eta_l, 0.82),
                               region_at_7_5us=int(chsh.frontier_region(km, 7.5e-6)),
-                              region_at_1ms=int(chsh.frontier_region(km, 1e-3))))
+                              region_at_1ms=int(chsh.frontier_region(km, 1e-3)),
+                              causal_at_20ms=int(chsh.causal_status(km, 20e-3,
+                                  HIBERNIA_ONE_WAY_S if "London" in name else None))))
 R["e4_landmarks"] = landmark_rows
 R["ny_london_light_ms"] = CASE["ny_london_km"] / c * 1e3
 R["hibernia_rtt_ms"] = 58.95
@@ -446,11 +484,13 @@ for r in landmark_rows:
 ''')
 
 md("""
-**Reading E4.** The startup's first product (New York ↔ London) sits deep in grey: the desks'
-shared line delivers one bit in about 29 ms one way, and one bit wins every round. Every metro
-route we checked (32–56 km) is red in any window short enough to stop the bit: photon loss
-already pushes the all-rounds win rate below 75%. The only green patch is a few kilometres wide
-and under ~20 µs tall.
+**Reading E4.** New York–London depends on the decision window. Above ~29.5 ms (half the Hibernia
+round-trip benchmark) one bit arrives over existing cable and wins every round. Between ~18.6 ms
+(light in vacuum) and ~29.5 ms it is route-dependent: a faster path could deliver the bit, the
+benchmarked cable does not. Below ~18.6 ms no bit can arrive, but direct-fibre photon loss leaves
+the modelled quantum strategy at 75%, no better than classical. Every metro route we checked
+(32–56 km) is red whenever the bit cannot arrive. Under the unheralded model, the region where the
+82% strategy wins is a few kilometres wide and, where physics rules out any bit, under ~19 µs tall.
 """)
 
 md("""

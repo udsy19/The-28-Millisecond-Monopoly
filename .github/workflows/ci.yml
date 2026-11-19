@@ -28,3 +28,39 @@ jobs:
           python scripts/render_deliverables.py
           python scripts/check_numbers.py
           git diff --exit-code -- results/results.json deliverables/memo.md || (echo "results or memo changed on re-run" && exit 1)
+
+  package:
+    # Builds the PDFs and submission.zip exactly as scripts/package.sh does locally, enforces
+    # the page limits, verifies the archive, and uploads it for inspection.
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Python deps, pandoc and Chromium (Playwright)
+        run: |
+          pip install -r requirements.txt
+          sudo apt-get update && sudo apt-get install -y pandoc zip
+          npm install --no-save playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: Build notebook, deliverables, PDFs and submission.zip
+        env:
+          NODE_PATH: ${{ github.workspace }}/node_modules
+        run: scripts/package.sh
+      - name: Check archive contents
+        run: |
+          unzip -tq submission.zip
+          for f in memo.pdf phase1.pdf one_page_brief.pdf claims_ledger.md assumptions.md main_frontier.png analysis_executed.html code/src/chsh.py; do
+            unzip -l submission.zip | grep -q " $f$" || { echo "missing $f"; exit 1; }
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: submission
+          path: |
+            submission.zip
+            build/*.pdf

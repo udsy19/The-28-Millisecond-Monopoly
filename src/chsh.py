@@ -17,7 +17,9 @@ import numpy as np
 # ---------------------------------------------------------------------------
 # Constants (all are modelling choices, recorded in DECISIONS.md / assumptions.md)
 # ---------------------------------------------------------------------------
-SPEED_OF_LIGHT_KM_S = 299_792.458   # vacuum; best case for a line-of-sight microwave link
+SPEED_OF_LIGHT_KM_S = 299_792.458   # vacuum: the earliest any signal can arrive
+FIBRE_GROUP_INDEX = 1.468           # standard single-mode fibre at 1550 nm
+FIBRE_SPEED_KM_S = SPEED_OF_LIGHT_KM_S / FIBRE_GROUP_INDEX   # ~204,000 km/s
 FIBRE_LOSS_DB_PER_KM = 0.2          # standard telecom fibre at 1550 nm
 EBERHARD_FLOOR = 2.0 / 3.0          # lowest efficiency any CHSH-type test can tolerate
 IDEAL_QUANTUM_WIN = math.cos(math.pi / 8) ** 2   # Tsirelson bound, ~0.8536
@@ -210,6 +212,18 @@ def simulate_lossy(n, eta, rng, visibility=1.0):
     return float(w.mean()), float(w[both].mean()), float(both.mean())
 
 
+def heralded_supply_fraction(d_km, rounds_per_s, pair_rate=1000.0, detector_eff=1.0, memory_eff=1.0):
+    """Largest heralded fraction h the link can actually supply.
+
+    Heralded pairs per second = generated pairs x (per-desk delivery x memory efficiency)^2.
+    Even with perfect, lossless memories that store pairs until needed, h cannot exceed
+    supply / demand. This is what stops the heralded scenario from implying unlimited range.
+    """
+    per_desk = fibre_eta(d_km, detector_eff=detector_eff) * memory_eff
+    supply = pair_rate * per_desk**2
+    return min(1.0, supply / rounds_per_s)
+
+
 def heralded_win(h, p_q):
     """Win rate with heralded delivery (quantum memories): founder-rescue scenario.
 
@@ -253,16 +267,50 @@ def cheater_exact(q=0.4375):
 # ---------------------------------------------------------------------------
 REGION_GREY, REGION_RED, REGION_YELLOW, REGION_GREEN = 0, 1, 2, 3
 
+# Causal status of one classical bit sent from desk A to desk B after the inputs arrive.
+CAUSAL_EXCLUDED, CAUSAL_ROUTE_DEPENDENT, CAUSAL_ARRIVES = 0, 1, 2
 
-def frontier_region(d_km, window_s, p_demo=0.82, detector_eff=1.0,
-                    c_km_s=SPEED_OF_LIGHT_KM_S):
+
+def route_latency_s(d_km, route_latency=None):
+    """One-way latency of the modelled classical route.
+
+    Default: a straight-line fibre at the fibre group velocity (c / 1.468). That is
+    optimistic for a real cable (real routes are longer) and pessimistic against a
+    line-of-sight microwave link (which runs close to c). Pass ``route_latency`` (seconds)
+    to use a measured or published figure for a specific route instead.
+    """
+    d_km = np.asarray(d_km, dtype=float)
+    modelled = d_km / FIBRE_SPEED_KM_S if route_latency is None else np.asarray(route_latency, dtype=float)
+    return np.maximum(modelled, d_km / SPEED_OF_LIGHT_KM_S)   # never faster than light
+
+
+def causal_status(d_km, window_s, route_latency=None):
+    """Can one classical bit reach the other desk within the decision window? Works on arrays.
+
+    CAUSAL_EXCLUDED        : window <= d / c. No signal of any kind can arrive (physics).
+    CAUSAL_ROUTE_DEPENDENT : d / c < window <= modelled route latency. Physics allows it,
+                             but the modelled route is too slow; a faster route might not be.
+    CAUSAL_ARRIVES         : window > modelled route latency. The bit arrives on the modelled
+                             route, and the one-bit rule wins every round.
+    """
+    d_km = np.asarray(d_km, dtype=float)
+    window_s = np.asarray(window_s, dtype=float)
+    status = np.full(np.broadcast(d_km, window_s).shape, CAUSAL_ROUTE_DEPENDENT)
+    status = np.where(window_s <= d_km / SPEED_OF_LIGHT_KM_S, CAUSAL_EXCLUDED, status)
+    status = np.where(window_s > route_latency_s(d_km, route_latency), CAUSAL_ARRIVES, status)
+    return status
+
+
+def frontier_region(d_km, window_s, p_demo=0.82, detector_eff=1.0, route_latency=None):
     """Classify a (separation, decision window) point. Works on arrays.
 
-    grey   : the window is longer than light-travel time, so one classical bit arrives
-             and wins every round.
-    green  : no time for a bit, and fibre efficiency beats the threshold at p_demo.
-    yellow : no time for a bit; only an ideal source near the 2/3 floor could win.
-    red    : no time for a bit and too much photon loss for any quantum strategy.
+    grey   : one classical bit arrives on the modelled route and wins every round.
+    Otherwise (no bit on the modelled route), the photon-loss model decides, for the
+             modelled unheralded strategy only:
+    green  : fibre efficiency beats the break-even level at source quality p_demo.
+    yellow : only a near-perfect tuned source near Eberhard's 2/3 floor could beat 75%.
+    red    : too much photon loss for the modelled strategies to beat 75%.
+    Combine with causal_status() to tell a physically excluded bit from a route-dependent one.
     """
     d_km = np.asarray(d_km, dtype=float)
     window_s = np.asarray(window_s, dtype=float)
@@ -270,7 +318,8 @@ def frontier_region(d_km, window_s, p_demo=0.82, detector_eff=1.0,
     region = np.full(np.broadcast(d_km, window_s).shape, REGION_RED)
     region = np.where(eta > EBERHARD_FLOOR, REGION_YELLOW, region)
     region = np.where(eta > eta_threshold(p_demo), REGION_GREEN, region)
-    region = np.where(window_s > d_km / c_km_s, REGION_GREY, region)
+    arrives = causal_status(d_km, window_s, route_latency) == CAUSAL_ARRIVES
+    region = np.where(arrives, REGION_GREY, region)
     return region
 
 

@@ -126,3 +126,30 @@ def test_heralded_never_below_classical():
         assert chsh.heralded_win(h, 0.82) >= 0.75
     assert chsh.heralded_win(1.0, 0.82) == pytest.approx(0.82)
     assert chsh.heralded_win(0.0, 0.82) == pytest.approx(0.75)
+
+
+def test_causal_status_three_states():
+    c = chsh.SPEED_OF_LIGHT_KM_S
+    hibernia_one_way = 58.95e-3 / 2
+    # NY-London at a 20 ms deadline: physics allows a bit (> 18.6 ms) but the
+    # benchmarked cable route does not deliver it (29.5 ms): route-dependent, not grey.
+    assert chsh.causal_status(5570, 0.020, hibernia_one_way) == chsh.CAUSAL_ROUTE_DEPENDENT
+    assert chsh.frontier_region(5570, 0.020, route_latency=hibernia_one_way) != chsh.REGION_GREY
+    assert chsh.causal_status(5570, 0.015) == chsh.CAUSAL_EXCLUDED        # faster than light
+    assert chsh.causal_status(5570, 0.035, hibernia_one_way) == chsh.CAUSAL_ARRIVES
+    # default modelled route: straight-line fibre at c / 1.468
+    d = 100.0
+    assert chsh.causal_status(d, 1.2 * d / c) == chsh.CAUSAL_ROUTE_DEPENDENT
+    assert chsh.causal_status(d, 1.5 * d / c) == chsh.CAUSAL_ARRIVES
+    # a quoted route latency can never be faster than light
+    assert chsh.route_latency_s(d, 0.0) == pytest.approx(d / c)
+
+
+def test_heralded_supply_is_capped_by_the_link():
+    # 1,000 pairs/s over 40 km easily covers well under one round per second ...
+    assert chsh.heralded_supply_fraction(40, 0.61) == 1.0
+    # ... but direct fibre across the Atlantic supplies essentially nothing.
+    assert chsh.heralded_supply_fraction(5570, 0.61) < 1e-100
+    # supply scales with the squared per-desk delivery
+    eta = chsh.fibre_eta(40)
+    assert chsh.heralded_supply_fraction(40, 1000.0) == pytest.approx(eta**2)

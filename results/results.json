@@ -147,6 +147,27 @@
         }
       ],
       "heralded_pairs_per_s_40km": 158.4893192461113,
+      "demand_rounds_per_s": 0.6090923888974801,
+      "supply": [
+        {
+          "route": "Startup 40 km link",
+          "km": 40.0,
+          "heralded_pairs_per_s": 158.4893192461113,
+          "h_max": 1.0
+        },
+        {
+          "route": "NYSE–Nasdaq",
+          "km": 56.0,
+          "heralded_pairs_per_s": 75.85775750291837,
+          "h_max": 1.0
+        },
+        {
+          "route": "New York–London (direct fibre)",
+          "km": 5570.0,
+          "heralded_pairs_per_s": 3.9810717055349203e-109,
+          "h_max": 6.5360719951550695e-109
+        }
+      ],
       "memories_claimed": false
     },
     "e3": {
@@ -166,7 +187,8 @@
         "eta": 0.4786300923226383,
         "win_all_rounds_82": 0.6412644100464439,
         "region_at_7_5us": 1,
-        "region_at_1ms": 0
+        "region_at_1ms": 0,
+        "causal_at_20ms": 2
       },
       {
         "name": "Startup 40 km test link",
@@ -175,7 +197,8 @@
         "eta": 0.3981071705534972,
         "win_all_rounds_82": 0.6412853266935348,
         "region_at_7_5us": 1,
-        "region_at_1ms": 0
+        "region_at_1ms": 0,
+        "causal_at_20ms": 2
       },
       {
         "name": "NYSE–Nasdaq",
@@ -184,7 +207,8 @@
         "eta": 0.2754228703338166,
         "win_all_rounds_82": 0.6555274866097551,
         "region_at_7_5us": 1,
-        "region_at_1ms": 0
+        "region_at_1ms": 0,
+        "causal_at_20ms": 2
       },
       {
         "name": "New York–London",
@@ -193,7 +217,8 @@
         "eta": 1.9952623149688665e-56,
         "win_all_rounds_82": 0.75,
         "region_at_7_5us": 1,
-        "region_at_1ms": 1
+        "region_at_1ms": 1,
+        "causal_at_20ms": 1
       }
     ],
     "ny_london_light_ms": 18.57952010253707,
@@ -275,6 +300,10 @@
     "dmax_floor_010": "35.2 km",
     "loss_017": "0.17 dB/km",
     "loss_010": "0.1 dB/km",
+    "demand_per_s": "0.61",
+    "trading_year": "252 days × 6.5 hours",
+    "fibre_index": "c/1.468",
+    "h_max_ny_lon": "7e-109",
     "herald_rate": "158",
     "heralded_win_full": "82.0%",
     "cheat_all": "75%",

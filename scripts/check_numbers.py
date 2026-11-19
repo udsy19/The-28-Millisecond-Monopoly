@@ -3,7 +3,16 @@
 A number passes if it appears inside some display string in results.json, or in the
 small allowlist below (citation details such as years, volume and page numbers, and
 list markers). Sources sections are skipped. Exit code 1 lists anything untraceable.
-Usage: python scripts/check_numbers.py [files...]   (default: deliverables/*.md)
+Usage: python scripts/check_numbers.py [files...]   (default: deliverables/*.md + README.md)
+
+Two levels of checking:
+1. Traceability (all rendered docs): every number appears in some results.json display string.
+   This alone cannot show that a number supports the *right* claim; a matching token could come
+   from an unrelated key.
+2. Binding (templated docs: memo, phase1, claims ledger, assumptions, README): the template may
+   contain no literal result numbers at all, so every number in the rendered file was filled
+   from a named results.json key. The claim-to-key mapping is then reviewable in the template.
+   Hand-written docs (evidence register, steelman, brief, script) only get level 1.
 """
 import json
 import re
@@ -57,9 +66,35 @@ def check(path):
     return bad
 
 
+def check_template(path):
+    """Level 2: no literal numbers outside {{placeholders}} (citations and allowlist excepted)."""
+    bad = []
+    text = strip_sources(path.read_text())
+    for lineno, line in enumerate(text.splitlines(), 1):
+        if line.lstrip().startswith("![") or line.lstrip().startswith("|---") or line.lstrip().startswith("<!--"):
+            continue
+        line = re.sub(r"\{\{\w+\}\}", "", line)            # placeholders are bound numbers
+        line = re.sub(r"^\s*\d+\.\s", "", line)
+        line = re.sub(r"`[^`]*`", "", line)
+        line = re.sub(r"\bE\d\b|\bA\d+\b|E2b|\bD\d+\b", "", line)
+        line = re.sub(r"https?://\S+", "", line)
+        # document names and fixed phrases that contain digits but are not results
+        line = re.sub(r"Phase [123]|question [1-5]|50/50|The-28-Millisecond-Monopoly|Theorem 10", "", line)
+        for tok in NUM.findall(line):
+            t = tok.replace("−", "-").lstrip("-").rstrip(",")
+            if t in ALLOW:
+                continue
+            bad.append(f"{path.relative_to(ROOT)}:{lineno}: literal '{tok}' not bound to a key  in: {line.strip()[:80]}")
+    return bad
+
+
+TEMPLATES = [*sorted((ROOT / "deliverables" / "templates").glob("*.md")), ROOT / "docs" / "README.template.md"]
+
 files = [Path(f).resolve() for f in sys.argv[1:]] or [*sorted((ROOT / "deliverables").glob("*.md")), ROOT / "README.md"]
 problems = [b for f in files for b in check(f)]
+if not sys.argv[1:]:
+    problems += [b for t in TEMPLATES for b in check_template(t)]
 for p in problems:
     print("UNTRACEABLE", p)
-print(f"checked {len(files)} files: {len(problems)} untraceable numbers")
+print(f"checked {len(files)} files and {len(TEMPLATES) if not sys.argv[1:] else 0} templates: {len(problems)} problems")
 sys.exit(1 if problems else 0)

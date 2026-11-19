@@ -29,15 +29,18 @@ Columbia COMS 4995W *Lab-to-Market: Quantum and AI Innovation*, Challenge 03 ("T
 | Startup's claimed 82% vs 75%, n = 1,000 | z = +5.1 (classical demo 74%: z = -0.7) | `CASE-FILE CLAIM` |
 | Per-desk photon efficiency, 40 km link (0.2 dB/km, midpoint source) | 0.398; both photons arrive in 16% of rounds | `MODEL` + `MONTE-CARLO` |
 | **All-rounds win rate on the startup's own 40 km link** | **64.1%** (82% source), 64.7% (ideal) | `MODEL` + `MONTE-CARLO` |
-| Break-even efficiency → max desk separation | 87.7% → 5.7 km (ideal source 8.2 km; Eberhard best case 17.6 km) | `MODEL` |
+| Break-even efficiency → max separation, unheralded strategies | 87.7% → 5.7 km (ideal source 8.2 km; Eberhard tuned states 17.6 km; heralded: no fixed cutoff, supply-limited) | `MODEL` |
 | Classical cheater that discards rounds (detection loophole) | 82% on kept rounds, 75% overall, 78.1% kept | `EXACT` + `MONTE-CARLO` |
 | Edge per round: claimed vs every-round accounting | $13.92 vs −$21.82 | `MODEL` (payoff invented by the case) |
 | Quantum edge with biased signals (Ding & Jiang Thm 10) | only when signals fire 29%–71% of the time | `PUBLISHED` + independent check |
 
-**Recommendation: do not invest at this valuation.** The physics is real, but the 82% headline and the
-40 km link cannot both hold for a trading desk: a desk must answer every round, and on that link photon loss pushes
-the quantum strategy below the free classical rule. Quantum could only pay within 5.7 km and under 19 µs
-decisions, and with any time to communicate one classical bit wins every round.
+**Recommendation: do not invest at this valuation.** The physics is real, but the evidence does not establish a usable,
+profitable coordination service. Under our specified unheralded fibre and fallback model, an 82% coincidence-level
+source would achieve about 64.1% across all attempted rounds on a 40 km link, below the free 75%
+classical rule; the company's measurement denominator and actual protocol remain unverified. The modelled 82%
+unheralded strategy only exceeds the classical baseline below approximately 5.7 km, under idealized assumptions, and
+whenever one classical bit can arrive over the desks' line it wins every round. Heralded delivery with quantum memories has
+no fixed distance cutoff but is limited by pair supply; across the Atlantic, direct fibre supplies essentially none.
 
 ![Main figure: where entanglement could pay](figures/main_frontier.png)
 
@@ -49,7 +52,9 @@ decisions, and with any time to communicate one classical bit wins every round.
    75%). The startup has not claimed memories, and it does nothing for New York–London.
 3. Perfect detectors are assumed (generous to the startup). Lower-loss fibre helps slowly: at 0.17 dB/km the 82% source
    reaches 6.7 km; a hypothetical 0.1 dB/km fibre gives 11.4 km.
-4. We checked three real routes (32–56 km) and New York–London, not every pair of facilities within a few kilometres.
+4. We checked three metro routes (32–56 km) and New York–London, not every pair of facilities within a few kilometres.
+   The one-bit boundary has three states (physically excluded / route-dependent / arrives on the modelled route);
+   New York–London's ~29.5 ms is derived from a 2015 round-trip benchmark, not a measured one-way service.
 5. The ±$100 payoff and the $50M claim are the case's own and were not matched to a real trade.
 
 Full record: [`DECISIONS.md`](DECISIONS.md) (every judgment call and every fix) ·

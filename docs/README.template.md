@@ -26,18 +26,21 @@ Columbia COMS 4995W *Lab-to-Market: Quantum and AI Innovation*, Challenge 03 ("T
 | Best classical rule without communication (all 16 deterministic strategies) | {{classical_max}} | `EXACT` brute force |
 | Ideal quantum strategy (Born-rule singlet sampling, {{n_mc}} rounds) | {{ideal_q}} | `EXACT` + `MONTE-CARLO` |
 | One classical bit over the desks' existing line | {{one_bit}} | `EXACT` |
-| Startup's claimed 82% vs 75%, n = {{n_trials}} | z = {{z_82}} (classical demo {{p_demo}}: z = {{z_74}}) | `CASE-FILE CLAIM` |
-| Per-desk photon efficiency, 40 km link (0.2 dB/km, midpoint source) | {{eta_40}}; both photons arrive in {{both_share}} of rounds | `MODEL` + `MONTE-CARLO` |
-| **All-rounds win rate on the startup's own 40 km link** | **{{win40_82}}** (82% source), {{win40_ideal}} (ideal) | `MODEL` + `MONTE-CARLO` |
-| Break-even efficiency → max desk separation | {{eta_star_82}} → {{dmax_82}} (ideal source {{dmax_ideal}}; Eberhard best case {{dmax_floor}}) | `MODEL` |
+| Startup's claimed {{p_claim}} vs {{classical_max}}, n = {{n_trials}} | z = {{z_82}} (classical demo {{p_demo}}: z = {{z_74}}) | `CASE-FILE CLAIM` |
+| Per-desk photon efficiency, {{link_km}} link ({{fibre_loss}}, midpoint source) | {{eta_40}}; both photons arrive in {{both_share}} of rounds | `MODEL` + `MONTE-CARLO` |
+| **All-rounds win rate on the startup's own {{link_km}} link** | **{{win40_82}}** ({{p_claim}} source), {{win40_ideal}} (ideal) | `MODEL` + `MONTE-CARLO` |
+| Break-even efficiency → max separation, unheralded strategies | {{eta_star_82}} → {{dmax_82}} (ideal source {{dmax_ideal}}; Eberhard tuned states {{dmax_floor}}; heralded: no fixed cutoff, supply-limited) | `MODEL` |
 | Classical cheater that discards rounds (detection loophole) | {{cheat_det}} on kept rounds, {{cheat_all}} overall, {{cheat_kept}} kept | `EXACT` + `MONTE-CARLO` |
 | Edge per round: claimed vs every-round accounting | {{edge_claim}} vs {{edge_all_82}} | `MODEL` (payoff invented by the case) |
 | Quantum edge with biased signals (Ding & Jiang Thm 10) | only when signals fire {{adv_lo_pct}}–{{adv_hi_pct}} of the time | `PUBLISHED` + independent check |
 
-**Recommendation: do not invest at this valuation.** The physics is real, but the {{p_claim}} headline and the
-{{link_km}} link cannot both hold for a trading desk: a desk must answer every round, and on that link photon loss pushes
-the quantum strategy below the free classical rule. Quantum could only pay within {{dmax_82}} and under {{green_us}}
-decisions, and with any time to communicate one classical bit wins every round.
+**Recommendation: do not invest at this valuation.** The physics is real, but the evidence does not establish a usable,
+profitable coordination service. Under our specified unheralded fibre and fallback model, an {{p_claim}} coincidence-level
+source would achieve about {{win40_82}} across all attempted rounds on a {{link_km}} link, below the free {{classical_max}}
+classical rule; the company's measurement denominator and actual protocol remain unverified. The modelled {{p_claim}}
+unheralded strategy only exceeds the classical baseline below approximately {{dmax_82}}, under idealized assumptions, and
+whenever one classical bit can arrive over the desks' line it wins every round. Heralded delivery with quantum memories has
+no fixed distance cutoff but is limited by pair supply; across the Atlantic, direct fibre supplies essentially none.
 
 ![Main figure: where entanglement could pay](figures/main_frontier.png)
 
@@ -47,9 +50,11 @@ decisions, and with any time to communicate one classical bit wins every round.
    the bar, but never past Eberhard's best case ({{dmax_floor}}), which we report.
 2. Heralded delivery with quantum memories removes the photon-loss penalty in principle (win rate never below
    {{classical_max}}). The startup has not claimed memories, and it does nothing for New York–London.
-3. Perfect detectors are assumed (generous to the startup). Lower-loss fibre helps slowly: at {{loss_017}} the 82% source
+3. Perfect detectors are assumed (generous to the startup). Lower-loss fibre helps slowly: at {{loss_017}} the {{p_claim}} source
    reaches {{dmax_82_017}}; a hypothetical {{loss_010}} fibre gives {{dmax_82_010}}.
-4. We checked three real routes (32–56 km) and New York–London, not every pair of facilities within a few kilometres.
+4. We checked three metro routes (32–56 km) and New York–London, not every pair of facilities within a few kilometres.
+   The one-bit boundary has three states (physically excluded / route-dependent / arrives on the modelled route);
+   New York–London's ~{{hibernia_one_way}} is derived from a 2015 round-trip benchmark, not a measured one-way service.
 5. The ±{{payoff}} payoff and the {{target}} claim are the case's own and were not matched to a real trade.
 
 Full record: [`DECISIONS.md`](DECISIONS.md) (every judgment call and every fix) ·

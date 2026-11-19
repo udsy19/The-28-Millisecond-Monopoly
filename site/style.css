@@ -711,3 +711,14 @@ input[type="range"]:disabled { opacity: 0.4; cursor: not-allowed; }
   .foot-brand { grid-column: span 5; }
   .foot-cols { grid-column: span 7; }
 }
+
+/* ---- additions: causal band swatches, warnings ------------------------------------------ */
+.sw-hatch { background: repeating-linear-gradient(-45deg, rgb(244 244 245 / 0.35) 0 1px, transparent 1px 4px); border-color: var(--border-strong); }
+.sw-dash { border-top-style: dashed; }
+.sw-pt { width: 8px; height: 8px; border: 0; background: var(--foreground); transform: rotate(45deg) scale(0.8); }
+.warn { display: grid; gap: 6px; margin-top: 8px; padding: 10px 12px; border: 1px solid var(--border); border-left: 2px solid var(--warn); border-radius: 4px; background: var(--warn-muted); font-size: 0.75rem; line-height: 1.55; color: var(--foreground); }
+.warn[hidden] { display: none; }
+.warn p::before { content: "Warning · "; font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--warn); }
+.ev-wrap { white-space: normal; align-items: flex-start; }
+.ev-wrap::before { margin-top: 3px; }
+@media (max-width: 639px) { .ev { white-space: normal; } }

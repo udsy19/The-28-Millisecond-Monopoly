@@ -1,0 +1,263 @@
+{
+  "seed": 20261119,
+  "n_monte_carlo": 1000000,
+  "values": {
+    "inputs": {
+      "pre_money": 25000000.0,
+      "investment": 3000000.0,
+      "p_quantum_claim": 0.82,
+      "p_classical_demo": 0.74,
+      "n_trials": 1000,
+      "payoff": 100.0,
+      "cost_quantum": 0.08,
+      "cost_classical": 0.001,
+      "target_annual": 50000000.0,
+      "link_km": 40.0,
+      "pair_rate": 1000.0,
+      "global_hft_pool": 5000000000.0,
+      "ny_london_km": 5570.0
+    },
+    "post_money": 28000000.0,
+    "stake": 0.10714285714285714,
+    "classical_max": 0.75,
+    "n_strategies": 16,
+    "n_strategies_at_max": 8,
+    "one_bit_win": 1.0,
+    "z_82": 5.1120772033815465,
+    "z_74": -0.7302967433402221,
+    "ci_82": [
+      0.7961878148839716,
+      0.8438121851160283
+    ],
+    "ci_74": [
+      0.7128131678932612,
+      0.7671868321067388
+    ],
+    "quantum_exact": 0.8535533905932733,
+    "quantum_mc": 0.853731,
+    "tsirelson": 0.8535533905932737,
+    "z_82_vs_ideal": -3.001106489686486,
+    "e2": {
+      "ideal": {
+        "p_q": 0.8535533905932737,
+        "eta_40": 0.3981071705534972,
+        "win_40": 0.6466031807270617,
+        "both_share_40": 0.15848931924611132,
+        "eta_star": 0.8284271247461902,
+        "d_max_km": 8.174568967388183,
+        "mc_all": 0.646689,
+        "mc_coincidence": 0.8541345886866749,
+        "mc_both": 0.158468,
+        "mc_abs_error": 8.581927293827007e-05
+      },
+      "p82": {
+        "p_q": 0.82,
+        "eta_40": 0.3981071705534972,
+        "win_40": 0.6412853266935348,
+        "both_share_40": 0.15848931924611132,
+        "eta_star": 0.8771929824561404,
+        "d_max_km": 5.690485133647257,
+        "mc_all": 0.641093,
+        "mc_coincidence": 0.8215186432964408,
+        "mc_both": 0.158207,
+        "mc_abs_error": 0.00019232669353475007
+      },
+      "floor_d_max_km": 17.609125905568128,
+      "light_time_us_at_floor": 58.73772149921172,
+      "light_time_us_at_p82": 18.981415248435827,
+      "attempted_rounds_if_postselected": 6309.573444801934,
+      "z_all_rounds_82": -7.9393971869007665
+    },
+    "detector_sensitivity": [
+      {
+        "det": 1.0,
+        "eta_40": 0.3981071705534972,
+        "win40_ideal": 0.6466031807270617,
+        "win40_82": 0.6412853266935348,
+        "dmax_ideal": 8.174568967388183,
+        "dmax_82": 5.690485133647257,
+        "dmax_floor": 17.609125905568128
+      },
+      {
+        "det": 0.9,
+        "eta_40": 0.3582964534981475,
+        "win40_ideal": 0.6483337537140126,
+        "win40_82": 0.6440262919468559,
+        "dmax_ideal": 3.5988199113206747,
+        "dmax_82": 1.1147360775797441,
+        "dmax_floor": 13.033376849500614
+      },
+      {
+        "det": 0.8,
+        "eta_40": 0.31848573644279776,
+        "win40_ideal": 0.6519774620210397,
+        "win40_82": 0.6485740354395826,
+        "dmax_ideal": 0.0,
+        "dmax_82": 0.0,
+        "dmax_floor": 7.918124604762486
+      }
+    ],
+    "e2b": {
+      "table": [
+        {
+          "h": 0.05,
+          "win_82": 0.7535,
+          "win_ideal": 0.7551776695296636,
+          "edge_82": 0.6209999999999896
+        },
+        {
+          "h": 0.158,
+          "win_82": 0.76106,
+          "win_ideal": 0.7663614357137372,
+          "edge_82": 2.1329999999999916
+        },
+        {
+          "h": 0.5,
+          "win_82": 0.7849999999999999,
+          "win_ideal": 0.8017766952966369,
+          "edge_82": 6.920999999999984
+        },
+        {
+          "h": 1.0,
+          "win_82": 0.82,
+          "win_ideal": 0.8535533905932737,
+          "edge_82": 13.920999999999989
+        }
+      ],
+      "heralded_pairs_per_s_40km": 158.4893192461113,
+      "memories_claimed": false
+    },
+    "e3": {
+      "mc_all": 0.749979,
+      "mc_detected": 0.8200845766112255,
+      "mc_retained": 0.781067,
+      "exact_all": 0.75,
+      "exact_detected": 0.8200000000000001,
+      "exact_retained": 0.78125,
+      "q": 0.4375
+    },
+    "e4_landmarks": [
+      {
+        "name": "Carteret–Secaucus",
+        "km": 32.0,
+        "light_time_us": 106.74051046340865,
+        "eta": 0.4786300923226383,
+        "win_all_rounds_82": 0.6412644100464439,
+        "region_at_7_5us": 1,
+        "region_at_1ms": 0
+      },
+      {
+        "name": "Startup 40 km test link",
+        "km": 40.0,
+        "light_time_us": 133.4256380792608,
+        "eta": 0.3981071705534972,
+        "win_all_rounds_82": 0.6412853266935348,
+        "region_at_7_5us": 1,
+        "region_at_1ms": 0
+      },
+      {
+        "name": "NYSE–Nasdaq",
+        "km": 56.0,
+        "light_time_us": 186.79589331096514,
+        "eta": 0.2754228703338166,
+        "win_all_rounds_82": 0.6555274866097551,
+        "region_at_7_5us": 1,
+        "region_at_1ms": 0
+      },
+      {
+        "name": "New York–London",
+        "km": 5570.0,
+        "light_time_us": 18579.52010253707,
+        "eta": 1.9952623149688665e-56,
+        "win_all_rounds_82": 0.75,
+        "region_at_7_5us": 1,
+        "region_at_1ms": 1
+      }
+    ],
+    "ny_london_light_ms": 18.57952010253707,
+    "hibernia_rtt_ms": 58.95,
+    "hibernia_one_way_ms": 29.475,
+    "e5": {
+      "gap_at_half": 0.10355339059327373,
+      "advantage_lo": 0.29289321881345254,
+      "advantage_hi": 0.7071067811865475,
+      "max_gap": 0.10355339059327373,
+      "gap_at_0_35": 0.007873195746668338,
+      "classical_bruteforce_max_err": 2.220446049250313e-16,
+      "quantum_numeric_max_err": 6.353806369929771e-13
+    },
+    "e6": {
+      "edge_claim": 13.920999999999989,
+      "rounds_for_target": 3591695.9988506604,
+      "hours_if_rate_is_delivered_rounds": 0.9976933330140724,
+      "hours_if_rate_is_generated_pairs": 6.295019360041523,
+      "edge_all_rounds_82": -21.821934661293046,
+      "edge_all_rounds_ideal": -20.758363854587664,
+      "annual_loss_at_target_volume": -78377755.41014677,
+      "share_of_global_pool": 0.01,
+      "payoff_is_invented": true
+    },
+    "hand_checks_passed": true
+  },
+  "display": {
+    "pre_money": "$25M",
+    "investment": "$3M",
+    "post_money": "$28M",
+    "stake": "10.7%",
+    "p_claim": "82%",
+    "p_demo": "74%",
+    "n_trials": "1,000",
+    "payoff": "$100",
+    "target": "$50M",
+    "link_km": "40 km",
+    "pair_rate": "1,000",
+    "global_pool": "$5B",
+    "cost_q": "$0.08",
+    "cost_c": "$0.001",
+    "classical_max": "75%",
+    "one_bit": "100%",
+    "z_82": "+5.1",
+    "z_74": "-0.7",
+    "ideal_q": "85.4%",
+    "ci_74": "71.3%–76.7%",
+    "eta_40": "0.398",
+    "eta_40_pct": "40%",
+    "win40_ideal": "64.7%",
+    "win40_82": "64.1%",
+    "both_share": "16%",
+    "eta_star_ideal": "82.8%",
+    "eta_star_82": "87.7%",
+    "dmax_ideal": "8.2 km",
+    "dmax_82": "5.7 km",
+    "dmax_floor": "17.6 km",
+    "attempted": "6,310",
+    "light_us_82": "19 µs",
+    "light_us_floor": "59 µs",
+    "dmax_82_det09": "1.1 km",
+    "herald_rate": "158",
+    "heralded_win_full": "82.0%",
+    "cheat_all": "75%",
+    "cheat_det": "82%",
+    "cheat_kept": "78.1%",
+    "ny_lon_light_ms": "18.6 ms",
+    "hibernia_one_way": "29.5 ms",
+    "nasdaq_win": "65.6%",
+    "carteret_win": "64.1%",
+    "nasdaq_light_us": "187 µs",
+    "dmax82_round": "6 km",
+    "green_us": "19 µs",
+    "gap_half": "10.4 percentage points",
+    "adv_lo": "0.29",
+    "adv_hi": "0.71",
+    "adv_lo_pct": "29%",
+    "adv_hi_pct": "71%",
+    "edge_claim": "$13.92",
+    "edge_claim_exact": "$13.921",
+    "rounds": "3.59 million",
+    "hours_delivered": "1.0 hours",
+    "hours_generated": "6.3 hours",
+    "edge_all_82": "−$21.82",
+    "annual_loss": "$78M",
+    "share_pool": "1.0%"
+  }
+}
